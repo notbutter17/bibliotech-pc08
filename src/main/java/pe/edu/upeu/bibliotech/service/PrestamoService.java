@@ -23,7 +23,7 @@ public class PrestamoService {
         Estudiante estudiante = estudianteRepository.buscarPorId(estudianteId)
                 .orElseThrow(() -> new EstudianteNoEncontradoException(estudianteId));
 
-        if (estudiante.suspendido()) {
+        if (!estudiante.suspendido()) { // ERROR CONTROLADO: condición invertida
             throw new EstudianteSuspendidoException(estudianteId);
         }
         if (!estudiante.activo()) {
