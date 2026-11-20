@@ -20,3 +20,7 @@ mvn spring-boot:run
 ```
 
 La API expone `GET /api/prestamos/validar` con los parámetros `estudianteId`, `prestamosActivos` y `ejemplaresDisponibles`.
+
+## Regla del Equipo 1
+
+Un estudiante suspendido no puede solicitar préstamos. La validación se ejecuta después de confirmar que el estudiante existe y antes de revisar las demás reglas de elegibilidad.

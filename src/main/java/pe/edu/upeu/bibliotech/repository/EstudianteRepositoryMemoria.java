@@ -9,8 +9,9 @@ import pe.edu.upeu.bibliotech.model.Estudiante;
 public class EstudianteRepositoryMemoria implements EstudianteRepository {
 
     private final Map<Integer, Estudiante> estudiantes = Map.of(
-            1, new Estudiante(1, "Ana Torres", true),
-            2, new Estudiante(2, "Luis Quispe", false));
+            1, new Estudiante(1, "Ana Torres", true, false),
+            2, new Estudiante(2, "Luis Quispe", false, false),
+            3, new Estudiante(3, "Rosa Mamani", true, true));
 
     @Override
     public Optional<Estudiante> buscarPorId(int estudianteId) {
