@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.bibliotech.service.EstudianteNoEncontradoException;
+import pe.edu.upeu.bibliotech.service.EstudianteSuspendidoException;
 import pe.edu.upeu.bibliotech.service.PrestamoService;
 
 @RestController
@@ -31,6 +32,10 @@ public class PrestamoController {
             return ResponseEntity.ok(Map.of(
                     "permitido", permitido,
                     "mensaje", permitido ? "Préstamo autorizado" : "Préstamo no autorizado"));
+        } catch (EstudianteSuspendidoException exception) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "permitido", false,
+                    "mensaje", exception.getMessage()));
         } catch (EstudianteNoEncontradoException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                     "permitido", false,
