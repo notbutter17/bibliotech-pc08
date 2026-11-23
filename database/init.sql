@@ -1,5 +1,27 @@
-
 -- DATOS INICIALES DE BIBLIOTECH V2
+
+-- PostgreSQL ejecuta este archivo antes de que Spring/Hibernate inicie.
+-- Por eso se crea primero el esquema mínimo y luego se cargan los datos.
+CREATE TABLE IF NOT EXISTS estudiantes (
+    id BIGSERIAL PRIMARY KEY,
+    nombre VARCHAR(255),
+    estado VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS libros (
+    id BIGSERIAL PRIMARY KEY,
+    titulo VARCHAR(255),
+    autor VARCHAR(255),
+    ejemplares_disponibles INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS prestamos (
+    id BIGSERIAL PRIMARY KEY,
+    estudiante_id BIGINT,
+    libro_id BIGINT,
+    fecha_prestamo DATE,
+    estado VARCHAR(255)
+);
 
 -- Estudiantes
 INSERT INTO estudiantes (id, nombre, estado)
