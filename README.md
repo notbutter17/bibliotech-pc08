@@ -13,7 +13,24 @@ La práctica original de validación de estudiantes suspendidos se conserva en e
 ## Configuración local
 
 1. Copia `.env.example` como `.env`.
-2. Cambia la contraseña de ejemplo.
-3. Ejecuta el proyecto con Docker Compose cuando la rama `develop` contenga la configuración de contenedores.
+2. Cambia la contraseña de ejemplo por una contraseña local segura.
+3. Construye e inicia toda la aplicación:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Abre el frontend en `http://localhost:4200`.
+5. La API queda disponible en `http://localhost:8080/api/prestamos`.
+
+Para detener los contenedores ejecuta `docker compose down`. Los datos de PostgreSQL se conservan en el volumen `postgres_data`; usa `docker compose down -v` únicamente si deseas reiniciar también los datos.
+
+## Documentación y verificaciones
+
+- Informe entregable: `docs/seguridad/Informe_Seguridad_BiblioTech.pdf`.
+- Versión editable: `docs/seguridad/Informe_Seguridad_BiblioTech.docx`.
+- Fuente del informe: `docs/seguridad/informe-seguridad.md`.
+- Estrategia de pruebas: `docs/estrategias-pruebas.md`.
+- CI: Maven/JUnit para el backend y ESLint/build para el frontend.
 
 Los secretos no deben escribirse en archivos rastreados por Git.
