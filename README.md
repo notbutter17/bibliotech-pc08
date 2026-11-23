@@ -1,26 +1,19 @@
-# BiblioTech
+# BiblioTech V2 — PC08
 
-Proyecto de la Práctica Calificada 08 de Pruebas y Despliegue de Software.
+Proyecto académico de gestión de préstamos de biblioteca de **notbutter17**, construido con Spring Boot, Angular y PostgreSQL. Su arquitectura sigue el proyecto integrador utilizado en el curso de Pruebas y Despliegue de Software.
 
-## Requisitos
+## Estrategia de ramas
 
-- Java 21
-- Maven 3.9 o superior
+- `main`: versión estable publicada.
+- `develop`: integración de funcionalidades terminadas.
+- `feature/*`: trabajo aislado que se integra a `develop` mediante pull request.
 
-## Ejecutar pruebas
+La práctica original de validación de estudiantes suspendidos se conserva en el historial anterior de `develop` y en sus ramas de trabajo. La arquitectura full stack se incorporó mediante `feature/alineacion-bibliotech-v2`.
 
-```bash
-mvn test
-```
+## Configuración local
 
-## Ejecutar la aplicación
+1. Copia `.env.example` como `.env`.
+2. Cambia la contraseña de ejemplo.
+3. Ejecuta el proyecto con Docker Compose cuando la rama `develop` contenga la configuración de contenedores.
 
-```bash
-mvn spring-boot:run
-```
-
-La API expone `GET /api/prestamos/validar` con los parámetros `estudianteId`, `prestamosActivos` y `ejemplaresDisponibles`.
-
-## Regla del Equipo 1
-
-Un estudiante suspendido no puede solicitar préstamos. La validación se ejecuta después de confirmar que el estudiante existe y antes de revisar las demás reglas de elegibilidad.
+Los secretos no deben escribirse en archivos rastreados por Git.
