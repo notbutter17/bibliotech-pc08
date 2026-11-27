@@ -1,0 +1,41 @@
+# Render Blueprint · BiblioTech (plan gratuito)
+# Render → New → Blueprint → selecciona este repositorio → Apply.
+# Las credenciales de la base las genera Render y se inyectan como variables (nunca están en el repositorio).
+databases:
+  - name: bibliotech-db
+    plan: free
+    databaseName: bibliotech_db
+    user: bibliotech
+
+services:
+  - type: web
+    name: bibliotech-backend
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/notbutter17/bibliotech-backend:1.0.0
+    healthCheckPath: /api/libros
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase: { name: bibliotech-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: bibliotech-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: bibliotech-db, property: database }
+      - key: DB_USERNAME
+        fromDatabase: { name: bibliotech-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: bibliotech-db, property: password }
+
+  - type: web
+    name: bibliotech-frontend
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/notbutter17/bibliotech-frontend:1.0.0
+    envVars:
+      # URL pública HTTPS del backend (Render la muestra en el servicio bibliotech-backend)
+      - key: BACKEND_URL
+        value: https://bibliotech-backend.onrender.com

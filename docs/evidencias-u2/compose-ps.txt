@@ -1,0 +1,4 @@
+NAME                         IMAGE                                           STATUS                   PORTS
+bibliotech-pc08-backend-1    ghcr.io/notbutter17/bibliotech-backend:1.0.0    Up 4 seconds             0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+bibliotech-pc08-db-1         postgres:17                                     Up 9 seconds (healthy)   5432/tcp
+bibliotech-pc08-frontend-1   ghcr.io/notbutter17/bibliotech-frontend:1.0.0   Up 4 seconds             0.0.0.0:4200->80/tcp, [::]:4200->80/tcp

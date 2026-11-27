@@ -30,20 +30,34 @@ Java 21+, Maven 3.9+, Node 22+, PostgreSQL 16/17 (o Docker).
 
 ## Levantar la aplicación
 
-Con Docker: copia `.env.example` a `.env`, luego:
+Con Docker (perfil `prod`, PostgreSQL + backend + frontend):
 
 ```bash
+cp .env.example .env        # cambia DB_PASSWORD
 docker compose up -d --build
+docker compose ps
 ```
 
-Frontend en http://localhost:4200, API en http://localhost:8080/api.
+Frontend en http://localhost:4200 (nginx reenvía `/api` al backend), API en http://localhost:8080/api.
+Con las imágenes publicadas: `docker compose -f docker-compose.release.yml up -d`.
 
-Sin Docker (desarrollo):
+Sin Docker (perfil `dev`):
 
 ```bash
-cd backend && SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/bibliotech_db SPRING_DATASOURCE_PASSWORD=<clave> mvn spring-boot:run
+cd backend && DB_PASSWORD=<clave> mvn spring-boot:run
 cd frontend && npm ci && npx ng serve     # proxy /api -> :8080 (proxy.conf.json)
 ```
+
+## Pipeline CI/CD (Unidad 2)
+
+| Workflow | Cuándo | Qué hace |
+|---|---|---|
+| `ci.yml` | cada push y PR a develop/main | backend `mvn verify` + JaCoCo, frontend lint + `ng test` + build, SonarCloud (quality gate), Trivy (secretos y dependencias); caché de Maven y npm |
+| `cd.yml` | merge en `main` o etiqueta `vX.Y.Z` | publica `ghcr.io/notbutter17/bibliotech-{backend,frontend}:X.Y.Z` y `latest`, crea la etiqueta git, despliega en Render y hace prueba de humo HTTPS |
+
+Imágenes: `docker pull ghcr.io/notbutter17/bibliotech-backend:1.0.0` · `docker pull ghcr.io/notbutter17/bibliotech-frontend:1.0.0`.
+Perfiles Spring: `dev` (local) y `prod` (contenedores/Render, credenciales solo por variables de entorno).
+Documentación: `docs/politica-ramas.md`, `docs/estrategia-entrega.md`, `docs/despliegue-render.md`, `performance/`.
 
 ## Comandos de prueba
 
