@@ -1,6 +1,6 @@
 # Política de ramas y revisión · BiblioTech (Git Flow)
 
-Equipo PC08: Ana Belen Arriaga Poquioma (`belenarriagap`), Jose Guillermo Ticona Lipa (`notbutter17`), Jannys Graciela Navarro Acrota (`Stephmarc`).
+Equipo PC08: Ana Belen Arriaga Poquioma (`belenarriagap`), Jose Guillermo Ticona Lipa (`notbutter17`), Jannys Graciela Navarro Acrota (`Stephmarc`) y Willim Yemis Parqui Vilca (`WILLIMPARQUI`).
 
 ## Ramas
 
