@@ -7,7 +7,7 @@
    ```bash
    gh secret set RENDER_DEPLOY_HOOK_BACKEND
    gh secret set RENDER_DEPLOY_HOOK_FRONTEND
-   gh variable set FRONTEND_URL --body "https://bibliotech-frontend.onrender.com"
+   gh variable set FRONTEND_URL --body "https://bibliotech-frontend-jvov.onrender.com"
    ```
 5. **SonarCloud**: https://sonarcloud.io → *Log in with GitHub* → importar `notbutter17/bibliotech-pc08` → *Administration → Analysis Method* → desactivar *Automatic Analysis* → *My Account → Security* → generar token → `gh secret set SONAR_TOKEN`.
 
