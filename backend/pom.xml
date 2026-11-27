@@ -30,6 +30,9 @@
 		<java.version>21</java.version>
 		<jacoco.version>0.8.14</jacoco.version>
 		<jacoco.minimo>0.80</jacoco.minimo>
+		<!-- Seguridad (Trivy, PR #7): versiones corregidas sobre las que trae Spring Boot 4.0.8 -->
+		<tomcat.version>11.0.25</tomcat.version>        <!-- CVE-2026-65182, -65637, -65905, -68525 (CRITICAL) -->
+		<jackson-bom.version>3.1.7</jackson-bom.version> <!-- CVE-2026-89407, -89425, -68497, -91776, -91777 (HIGH) -->
 	</properties>
 	<dependencies>
 		<dependency>
