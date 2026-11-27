@@ -39,8 +39,8 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
     &nbsp;&nbsp;· Jannys Graciela Navarro Acrota (GitHub: Stephmarc)<br>
     <b>Docente:</b> Dayvis Victor Farfan Gavancho<br>
     <b>Repositorio:</b> https://github.com/notbutter17/bibliotech-pc08<br>
-    <b>Imágenes:</b> ghcr.io/notbutter17/bibliotech-backend:1.0.0 · bibliotech-frontend:1.0.0<br>
-    <b>URL pública:</b> https://bibliotech-frontend.onrender.com<br>
+    <b>Imágenes:</b> ghcr.io/notbutter17/bibliotech-{backend,frontend}:1.0.0-rc.2 (amd64 + arm64)<br>
+    <b>URL pública (HTTPS):</b> https://bibliotech-frontend-jvov.onrender.com<br>
     <b>Fecha:</b> 27 de noviembre de 2026
   </div>
 </section>
@@ -89,7 +89,14 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
 <tr><td><b>F2</b> · Backend/Seguridad (runs 46024844387, 46026007062)</td><td><i>Non-resolvable parent POM … (absent)</i>: un 429 de Maven Central dejó en la caché de Actions el POM padre marcado como ausente, y los jobs que restauraban esa caché fallaban sin reintentar</td><td>Commit <code>061e676</code>: <code>mvn -B -U</code> (fuerza a reconsultar los artefactos ausentes). Los PR #8 y #9 pasaron a verde</td></tr>
 <tr><td>F3 · histórico (run 44672379220)</td><td>Error controlado introducido en la validación de estudiante (práctica de la Sesión 8)</td><td>Commit <code>fix: corregir validacion de estudiante suspendido</code> → run 44672559982 en verde</td></tr></table>
 <figure style="width:80%;margin:auto"><img src="../evidencias-u2/t-cache.png"><figcaption>Fig. 5 · Log de F2 y su corrección</figcaption></figure>
-<p><b>SonarCloud:</b> el job ya está integrado en el pipeline, pero el análisis requiere el secreto <code>SONAR_TOKEN</code> (cuenta de SonarCloud del equipo) <span class="pend">PENDIENTE</span>. En cuanto se registre el token, el job ejecutará el scanner y esperará el quality gate. Configuración: <code>sonar-project.properties</code> (fuentes Java y Angular, cobertura JaCoCo y lcov).</p>
+<div class="fila"><div style="flex:1.25"><figure><img src="../evidencias-u2/t-sonar.png"><figcaption>Fig. 6 · SonarCloud desde el CI (PR #9): <b>QUALITY GATE STATUS: PASSED</b> y condiciones del gate</figcaption></figure></div>
+<div><p><b>SonarCloud (interpretación):</b> el job importa la cobertura de JaCoCo (backend) y lcov (Angular) y espera el veredicto del quality gate <i>Sonar way</i>, que se evalúa sobre el código nuevo:</p>
+<ul><li><b>Cobertura del código nuevo: 96,6 %</b> (umbral 80 %).</li>
+<li>Duplicación: 0 %.</li>
+<li>Calificaciones de confiabilidad, seguridad y mantenibilidad: <b>A</b>.</li>
+<li>Security hotspots: 0 (100 % revisados).</li>
+<li>Bugs, vulnerabilidades y code smells: 0, sobre 884 líneas.</li></ul>
+<p>El primer análisis automático de <code>main</code> (código anterior a la Unidad 1) marcaba 12 issues y 0 % de cobertura. Para que la cobertura y el gate se calculen en el CI, se desactivó <i>Automatic Analysis</i>.</p></div></div>
 
 <h2>4. Contenedores y Docker Compose</h2>
 <table><tr><th></th><th>Etapa 1 (build)</th><th>Etapa 2 (ejecución)</th><th>Decisiones</th></tr>
@@ -104,15 +111,21 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
 <tr><td><code>BACKEND_URL</code> (servicio frontend)</td><td><code>http://backend:8080</code> en Compose; la URL HTTPS del backend en Render</td></tr></table>
 <p><b>Compose:</b> <code>db</code> (postgres:17 con <code>init.sql</code> y healthcheck <code>pg_isready</code>) → <code>backend</code> (<code>depends_on: service_healthy</code>, perfil prod) → <code>frontend</code>. Volumen <code>postgres_data</code>, <code>restart: unless-stopped</code>. <code>docker-compose.release.yml</code> usa las imágenes publicadas en lugar de compilarlas.</p>
 <p class="nota">Verificado en local: los 3 contenedores en ejecución; Newman <b>36/36</b> aserciones y Cypress <b>6/6</b> contra los contenedores (entrada por nginx :4200).</p>
-</div><div style="flex:1.1"><figure><img src="../evidencias-u2/t-docker.png"><figcaption>Fig. 6 · <code>docker compose up -d --build</code>, <code>ps</code>, imágenes y suites de la U1 contra los contenedores</figcaption></figure></div></div>
+</div><div style="flex:1.1"><figure><img src="../evidencias-u2/t-docker.png"><figcaption>Fig. 7 · <code>docker compose up -d --build</code>, <code>ps</code>, imágenes y suites de la U1 contra los contenedores</figcaption></figure></div></div>
 
 <h2>5. Entrega continua</h2>
 <table><tr><th>Aspecto</th><th>Implementación</th><th>Estado</th></tr>
 <tr><td>Versionado</td><td>SemVer en <code>VERSION</code> (1.0.0). <code>cd.yml</code> etiqueta las imágenes con <code>1.0.0</code>, <code>latest</code> y <code>sha-&lt;commit&gt;</code>, y crea la etiqueta git <code>v1.0.0</code>. Una etiqueta <code>vX.Y.Z</code> también dispara el workflow</td><td class="ok">Listo</td></tr>
-<tr><td>Imágenes publicadas</td><td><code>ghcr.io/notbutter17/bibliotech-backend:1.0.0</code> y <code>bibliotech-frontend:1.0.0</code>, publicadas al integrar el PR de release en <code>main</code> (con caché de capas <code>type=gha</code>)</td><td><span class="pend">PENDIENTE</span> hasta el merge en main</td></tr>
-<tr><td>Despliegue</td><td>Render, plan gratuito: <code>render.yaml</code> crea PostgreSQL + 2 servicios web desde las imágenes. <code>cd.yml</code> llama a los deploy hooks con <code>imgURL=…:1.0.0</code> y luego hace una prueba de humo sobre <code>https://…/api/libros</code>. HTTPS y certificado gestionados por Render</td><td><span class="pend">PENDIENTE</span> hasta crear la cuenta de Render</td></tr>
-<tr><td>Secretos</td><td>GitHub Secrets: <code>SONAR_TOKEN</code>, <code>RENDER_DEPLOY_HOOK_BACKEND</code>, <code>RENDER_DEPLOY_HOOK_FRONTEND</code>. <code>GITHUB_TOKEN</code> automático para GHCR. Las credenciales de la BD las genera Render. Trivy confirma <b>0 secretos</b> en el repositorio y <code>.env</code> está en <code>.gitignore</code></td><td class="ok">0 secretos en el repo</td></tr>
+<tr><td>Imágenes publicadas</td><td>Paquetes <b>públicos</b> en GHCR: <code>bibliotech-backend</code> y <code>bibliotech-frontend</code> con las etiquetas <code>1.0.0-rc.2</code>, <code>latest</code> y <code>sha-…</code>, en <b>linux/amd64 + linux/arm64</b> (Fig. 8). Las etiquetas <code>vX.Y.Z-rc.N</code> publican candidatas; la <code>1.0.0</code> definitiva sale al integrar el PR de release en <code>main</code></td><td class="ok">Publicadas (rc.2)</td></tr>
+<tr><td>Despliegue</td><td>Render, plan gratuito, con el Blueprint <code>render.yaml</code>: PostgreSQL + <code>bibliotech-backend-6c63</code> + <code>bibliotech-frontend-jvov</code>. HTTPS con certificado de Google Trust Services. El frontend consume al backend desplegado a través de <code>/api</code> (Fig. 9). Al integrar en <code>main</code>, <code>cd.yml</code> llama a los deploy hooks (secretos ya configurados) con <code>imgURL=…:X.Y.Z</code> y hace la prueba de humo</td><td class="ok">En línea (HTTPS) · despliegue automático al integrar en main</td></tr>
+<tr><td>Secretos</td><td>GitHub Secrets (configurados): <code>SONAR_TOKEN</code>, <code>RENDER_DEPLOY_HOOK_BACKEND</code>, <code>RENDER_DEPLOY_HOOK_FRONTEND</code>. <code>GITHUB_TOKEN</code> automático para GHCR. Las credenciales de la BD las genera Render. Trivy confirma <b>0 secretos</b> en el repositorio y <code>.env</code> está en <code>.gitignore</code></td><td class="ok">0 secretos en el repo</td></tr>
 <tr><td>Perfiles Spring</td><td><code>dev</code>: PostgreSQL local, <code>show-sql</code>, DEBUG. <code>prod</code>: <code>DB_HOST/PORT/NAME/USERNAME/PASSWORD</code> sin valores por defecto (si falta uno, no arranca), pool de 5 conexiones, sin stacktrace. Las pruebas usan H2 y el perfil <code>ci</code> usa PostgreSQL en Actions</td><td class="ok">Listo (prod verificado en Compose)</td></tr></table>
+<p><b>Hallazgo E1:</b> el <code>docker pull</code> del docente fallaba en Mac con Apple Silicon con el error <i>no matching manifest for linux/arm64</i>, porque las imágenes se construían solo para amd64. <b>Acción:</b> se agregaron QEMU y <code>platforms: linux/amd64,linux/arm64</code> en <code>cd.yml</code> y se publicó <code>v1.0.0-rc.2</code>; <code>docker pull</code> ya funciona en ambas arquitecturas (Fig. 10).</p>
+<div class="fila">
+<figure><img src="../evidencias-u2/ghcr-backend.png"><figcaption>Fig. 8 · Paquete público en GHCR con etiquetas versionadas</figcaption></figure>
+<figure><img src="../evidencias-u2/render-prestamos-https.png"><figcaption>Fig. 9 · BiblioTech en Render con HTTPS: el frontend consume al backend desplegado</figcaption></figure>
+</div>
+<figure style="width:88%;margin:auto"><img src="../evidencias-u2/t-deploy.png"><figcaption>Fig. 10 · <code>docker pull</code> de las imágenes publicadas, respuesta HTTPS, API vía nginx y certificado TLS</figcaption></figure>
 <h3>Estrategia de entrega: blue-green</h3>
 <p>BiblioTech corre <b>una instancia por servicio</b>, así que <i>rolling</i> se reduce a reemplazar la única instancia. <i>Canary</i> necesita tráfico suficiente para que un 5 % sea representativo, y una biblioteca universitaria no lo tiene. Con <b>blue-green</b>, la versión nueva (green) arranca en paralelo y Render solo le pasa el tráfico cuando responde el health check (<code>/api/libros</code>). Si falla, la versión anterior (blue) sigue sirviendo, sin caída.</p>
 <p><b>Rollback:</b> (1) automático si green no pasa el health check; (2) en Render → <i>Deploys → Rollback</i>, o llamando al hook con la imagen anterior (<code>imgURL=…:1.0.0</code>), porque las imágenes versionadas son inmutables; (3) <code>git revert</code> del merge → PR → <code>cd.yml</code> publica X.Y.(Z+1). Los cambios de esquema son solo aditivos, así que blue sigue funcionando con la base de green.</p>
@@ -138,8 +151,8 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
 <tr><td>POST /api/prestamos</td><td>200</td><td>3,3</td><td>5</td><td>7</td><td>15</td><td>0 %</td><td>19,8</td></tr></table>
 <p style="font-size:8pt;color:#555">Tiempos en ms. Equipo: MacBook (Apple Silicon), Docker Desktop. Reportes HTML en <code>performance/resultados/</code>.</p>
 <div class="fila">
-<figure><img src="../evidencias-u2/jmeter-estres.png"><figcaption>Fig. 7 · Estrés antes de la corrección: la verificación del stock falla</figcaption></figure>
-<figure><img src="../evidencias-u2/jmeter-estres-corregido.png"><figcaption>Fig. 8 · Estrés tras la corrección: 0 % de errores e integridad OK</figcaption></figure>
+<figure><img src="../evidencias-u2/jmeter-estres.png"><figcaption>Fig. 11 · Estrés antes de la corrección: la verificación del stock falla</figcaption></figure>
+<figure><img src="../evidencias-u2/jmeter-estres-corregido.png"><figcaption>Fig. 12 · Estrés tras la corrección: 0 % de errores e integridad OK</figcaption></figure>
 </div>
 <p><b>Hallazgo R1 (defecto real):</b> bajo estrés, <b>1000 préstamos descontaron solo 367 ejemplares</b>. Es una <i>actualización perdida</i>: dos transacciones leen el mismo stock y ambas escriben stock − 1. Ya se había anotado como riesgo H7 en la Unidad 1.</p>
 <p><b>Acción:</b> <code>LibroRepository.findByIdParaActualizar</code> con <code>@Lock(PESSIMISTIC_WRITE)</code> (SELECT … FOR UPDATE) en <code>registrarPrestamo</code> y <code>devolverLibro</code>, más la prueba de regresión <code>prestamosConcurrentes_noPierdenActualizaciones</code> (20 hilos), que sin el bloqueo falla con <i>expected 30 but was 47</i>.</p>
@@ -147,7 +160,7 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
 <p><b>Hallazgo R2 (riesgo):</b> <code>GET /api/libros</code> no está paginado, así que la respuesta crece con el catálogo. <b>Acción propuesta:</b> paginar con <code>Pageable</code> en la próxima versión (1.1.0).</p>
 
 <h2>7. Seguridad: escaneo de dependencias (Trivy)</h2>
-<figure><img src="../evidencias-u2/t-trivy.png"><figcaption>Fig. 9 · Trivy sobre el jar del backend: antes (11 CVE), falla en CI, después (0 CVE) y escaneo de secretos (0)</figcaption></figure>
+<figure><img src="../evidencias-u2/t-trivy.png"><figcaption>Fig. 13 · Trivy sobre el jar del backend: antes (11 CVE), falla en CI, después (0 CVE) y escaneo de secretos (0)</figcaption></figure>
 <table><tr><th>#</th><th>Librería</th><th>CVE</th><th>Sev.</th><th>Riesgo para BiblioTech</th><th>Acción</th><th>Resultado</th></tr>
 <tr><td>1–4</td><td>tomcat-embed-core 11.0.24</td><td>CVE-2026-65182, -65637, -65905, -68525</td><td>CRITICAL</td><td>Evasión de restricciones, HTTP/2 y bypass de autenticación DIGEST/FORM en el servidor embebido expuesto a Internet</td><td><code>tomcat.version=11.0.25</code></td><td class="ok">Corregido</td></tr>
 <tr><td>5–6</td><td>jackson-core 3.1.5</td><td>CVE-2026-89407, -89425</td><td>HIGH</td><td>Denegación de servicio con JSON malicioso en <code>POST /api/*</code></td><td><code>jackson-bom.version=3.1.7</code></td><td class="ok">Corregido</td></tr>
@@ -159,12 +172,12 @@ figcaption { font-size:7.8pt; color:#555; text-align:center; }
 <h2>8. Estado de la entrega</h2>
 <table><tr><th>Requisito de la guía</th><th>Mínimo</th><th>Estado</th></tr>
 <tr><td>Flujo Git: develop, feature/*, PR revisados, main protegida</td><td>3 PR</td><td>4 PR abiertos (#6–#9) con CI en verde; main protegida ✔ · aprobación de compañeros <span class="pend">PENDIENTE</span></td></tr>
-<tr><td>Análisis estático: SonarCloud y quality gate</td><td>1</td><td>Job y configuración listos · <code>SONAR_TOKEN</code> <span class="pend">PENDIENTE</span></td></tr>
+<tr><td>Análisis estático: SonarCloud y quality gate</td><td>1</td><td class="ok">Cumplido: quality gate PASSED (cobertura 96,6 %, 0 bugs, 0 vulnerabilidades)</td></tr>
 <tr><td>CI: ci.yml en cada push/PR, mvn verify, ng test, cobertura, caché</td><td>1 workflow</td><td class="ok">Cumplido, con evidencia de 2 fallas corregidas</td></tr>
 <tr><td>Dos Dockerfile multi-stage</td><td>2</td><td class="ok">Cumplido</td></tr>
 <tr><td>docker-compose.yml, variables en .env, solo .env.example</td><td>1</td><td class="ok">Cumplido (verificado en local)</td></tr>
-<tr><td>cd.yml publica 2 imágenes con versión</td><td>2 imágenes</td><td>Workflow listo · publicación al integrar en main <span class="pend">PENDIENTE</span></td></tr>
-<tr><td>Despliegue automático con URL pública y HTTPS</td><td>1</td><td>cd.yml + render.yaml listos · cuenta de Render y deploy hooks <span class="pend">PENDIENTE</span></td></tr>
+<tr><td>cd.yml publica 2 imágenes con versión</td><td>2 imágenes</td><td class="ok">Cumplido: 2 imágenes públicas 1.0.0-rc.2 multi-arquitectura; la 1.0.0 sale al integrar en main</td></tr>
+<tr><td>Despliegue automático con URL pública y HTTPS</td><td>1</td><td class="ok">En línea: https://bibliotech-frontend-jvov.onrender.com · deploy hooks en GitHub Secrets; el primer despliegue automático ocurre al integrar en main</td></tr>
 <tr><td>Secretos solo en GitHub Secrets; perfiles dev y prod</td><td>0 en el repo</td><td class="ok">Cumplido (Trivy: 0 secretos)</td></tr>
 <tr><td>Estrategia de entrega y rollback</td><td>1</td><td class="ok">Blue-green documentada</td></tr>
 <tr><td>Plan JMeter (GET libros, POST préstamos)</td><td>1 plan</td><td class="ok">Cumplido, con un defecto real hallado y corregido</td></tr>
