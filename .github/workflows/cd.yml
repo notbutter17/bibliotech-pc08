@@ -1,0 +1,140 @@
+name: BiblioTech CD
+
+# Se ejecuta al integrar en main (tras el PR aprobado y el CI en verde) o al publicar una etiqueta vX.Y.Z.
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+concurrency:
+  group: cd-produccion
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Calcular versión
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      owner: ${{ steps.v.outputs.owner }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then VERSION="${GITHUB_REF_NAME#v}"; else VERSION="$(cat VERSION)"; fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+          echo "### Versión a publicar: \`$VERSION\`" >> "$GITHUB_STEP_SUMMARY"
+
+  publicar:
+    name: Publicar imagen ${{ matrix.componente }}
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        componente: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Emulación para construir también linux/arm64 (Mac con Apple Silicon); Render usa linux/amd64.
+      - name: Configurar QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Configurar Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Autenticarse en GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Etiquetas y metadatos (semver)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ needs.version.outputs.owner }}/bibliotech-${{ matrix.componente }}
+          tags: |
+            type=raw,value=${{ needs.version.outputs.version }}
+            type=raw,value=latest
+            type=sha,prefix=sha-
+          labels: |
+            org.opencontainers.image.title=bibliotech-${{ matrix.componente }}
+            org.opencontainers.image.version=${{ needs.version.outputs.version }}
+
+      - name: Construir y publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.componente }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.componente }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.componente }}
+
+  etiquetar:
+    name: Etiqueta git v${{ needs.version.outputs.version }}
+    needs: [version, publicar]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear la etiqueta si no existe
+        run: |
+          TAG="v${{ needs.version.outputs.version }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            echo "La etiqueta $TAG ya existe"
+          else
+            git tag "$TAG" && git push origin "$TAG"
+          fi
+
+  # Solo main despliega. Una etiqueta vX.Y.Z-rc.N publica imágenes candidatas sin desplegar.
+  desplegar:
+    name: Desplegar en Render
+    needs: [version, publicar]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: produccion
+      url: ${{ vars.FRONTEND_URL }}
+    env:
+      HOOK_BACKEND: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
+      HOOK_FRONTEND: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}
+      FRONTEND_URL: ${{ vars.FRONTEND_URL }}
+      IMG: ghcr.io/${{ needs.version.outputs.owner }}/bibliotech
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Verificar configuración
+        run: |
+          if [ -z "$HOOK_BACKEND" ] || [ -z "$HOOK_FRONTEND" ]; then
+            echo "::error::Faltan los secretos RENDER_DEPLOY_HOOK_BACKEND / RENDER_DEPLOY_HOOK_FRONTEND"; exit 1
+          fi
+
+      # El deploy hook de Render acepta imgURL para desplegar una versión concreta de la imagen.
+      - name: Desplegar backend ${{ needs.version.outputs.version }}
+        run: curl -fsS -X POST "$HOOK_BACKEND&imgURL=$(printf %s "$IMG-backend:$VERSION" | jq -sRr @uri)" -o /dev/null
+
+      - name: Desplegar frontend ${{ needs.version.outputs.version }}
+        run: curl -fsS -X POST "$HOOK_FRONTEND&imgURL=$(printf %s "$IMG-frontend:$VERSION" | jq -sRr @uri)" -o /dev/null
+
+      # Prueba de humo: la URL pública HTTPS responde y el frontend llega al backend a través de /api.
+      - name: Prueba de humo sobre la URL pública
+        run: |
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$FRONTEND_URL/api/libros" || true)
+            echo "Intento $i: HTTP $code"
+            if [ "$code" = "200" ]; then
+              echo "### Despliegue verificado: $FRONTEND_URL (HTTP 200 en /api/libros)" >> "$GITHUB_STEP_SUMMARY"; exit 0
+            fi
+            sleep 15
+          done
+          echo "::error::El despliegue no respondió a tiempo"; exit 1

@@ -1,0 +1,16 @@
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.550 s -- in Mockito · PrestamoService
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in Mockito · EstudianteService (RN-02)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in Mockito · LibroService (RN-01)
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in RN-02 · Validaciones de estudiante
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in Camino básico · registrarPrestamo()  V(G)=5
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in RN-01 · Validaciones de libro
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in Camino básico · devolverLibro()  V(G)=3
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.450 s -- in @WebMvcTest · PrestamoController y EstudianteController
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.601 s -- in @SpringBootTest · Flujo préstamo / devolución
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in @WebMvcTest · LibroController
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Analyzed bundle '' with 17 classes
+[INFO] Analyzed bundle 'bibliotech_v2' with 17 classes
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS

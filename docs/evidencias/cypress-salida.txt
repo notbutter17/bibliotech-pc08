@@ -1,0 +1,40 @@
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     03-prestar-libro.cy.ts                                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/joseguillermoticona/Downloads/bibliotech-pc08/e2e/cypress/screenshots/03-    (2560x1946)
+     prestar-libro.cy.ts/flujo3-ejemplar-baja.png                                                   
+  -  /Users/joseguillermoticona/Downloads/bibliotech-pc08/e2e/cypress/screenshots/03-    (2560x1926)
+     prestar-libro.cy.ts/flujo3-devolucion.png                                                      
+  -  /Users/joseguillermoticona/Downloads/bibliotech-pc08/e2e/cypress/screenshots/03-    (2560x1992)
+     prestar-libro.cy.ts/flujo3-sin-ejemplares.png                                                  
+
+
+================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  01-registrar-libro.cy.ts                 00:02        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  02-registrar-estudiante.cy.ts            00:01        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  03-prestar-libro.cy.ts                   00:02        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:06        6        6        -        -        -  
+

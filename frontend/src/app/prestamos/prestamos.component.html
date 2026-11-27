@@ -1,0 +1,91 @@
+@if (mensaje()) {
+  <p class="alerta" [class.ok]="exito()" [class.ko]="!exito()" data-cy="mensaje">{{ mensaje() }}</p>
+}
+
+<div class="columnas">
+  <section class="tarjeta">
+    <h2>Registrar estudiante</h2>
+    <form (ngSubmit)="registrarEstudiante()" data-cy="form-estudiante">
+      <div class="campo">
+        <label for="dni">DNI</label>
+        <input id="dni" name="dni" [(ngModel)]="dni" data-cy="dni" />
+      </div>
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" [(ngModel)]="nombre" data-cy="nombre" />
+      </div>
+      <button type="submit" class="btn-primario" data-cy="btn-registrar-estudiante">Registrar estudiante</button>
+    </form>
+  </section>
+
+  <section class="tarjeta">
+    <h2>Registrar préstamo</h2>
+    <form (ngSubmit)="registrarPrestamo()" data-cy="form-prestamo">
+      <div class="campo">
+        <label for="estudiante">Estudiante</label>
+        <select id="estudiante" name="estudiante" [(ngModel)]="estudianteId" data-cy="select-estudiante">
+          <option [ngValue]="null">-- Selecciona --</option>
+          @for (e of estudiantes(); track e.id) {
+            <option [ngValue]="e.id">{{ e.dni }} · {{ e.nombre }} ({{ e.estado }})</option>
+          }
+        </select>
+      </div>
+      <div class="campo">
+        <label for="libro">Libro</label>
+        <select id="libro" name="libro" [(ngModel)]="libroId" data-cy="select-libro">
+          <option [ngValue]="null">-- Selecciona --</option>
+          @for (l of libros(); track l.id) {
+            <option [ngValue]="l.id">{{ l.titulo }} ({{ l.ejemplaresDisponibles }} ejemplares)</option>
+          }
+        </select>
+      </div>
+      <button type="submit" class="btn-primario" data-cy="btn-prestar">Prestar libro</button>
+    </form>
+  </section>
+</div>
+
+<section class="tarjeta">
+  <h2>Existencias</h2>
+  <table data-cy="tabla-existencias">
+    <thead>
+      <tr><th>ISBN</th><th>Título</th><th>Ejemplares</th><th>Estado</th></tr>
+    </thead>
+    <tbody>
+      @for (l of libros(); track l.id) {
+        <tr [attr.data-isbn]="l.isbn" data-cy="fila-existencia">
+          <td>{{ l.isbn }}</td>
+          <td>{{ l.titulo }}</td>
+          <td data-cy="ejemplares">{{ l.ejemplaresDisponibles }}</td>
+          <td><span class="estado" [class.no]="l.estado !== 'DISPONIBLE'">{{ l.estado }}</span></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+<section class="tarjeta">
+  <h2>Préstamos</h2>
+  <table data-cy="tabla-prestamos">
+    <thead>
+      <tr><th>#</th><th>Estudiante</th><th>Libro</th><th>Fecha</th><th>Estado</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (p of prestamos(); track p.id) {
+        <tr data-cy="fila-prestamo">
+          <td>{{ p.id }}</td>
+          <td>{{ p.estudiante.nombre }}</td>
+          <td>{{ p.libro.titulo }}</td>
+          <td>{{ p.fechaPrestamo }}</td>
+          <td>{{ p.estado }}</td>
+          <td>
+            @if (p.estado === 'ACTIVO') {
+              <button type="button" class="btn-secundario" (click)="devolver(p)" data-cy="btn-devolver">Devolver</button>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="6">Sin préstamos.</td></tr>
+      }
+    </tbody>
+  </table>
+</section>
