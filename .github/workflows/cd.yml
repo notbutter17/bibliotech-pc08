@@ -92,9 +92,11 @@ jobs:
             git tag "$TAG" && git push origin "$TAG"
           fi
 
+  # Solo main despliega. Una etiqueta vX.Y.Z-rc.N publica imágenes candidatas sin desplegar.
   desplegar:
     name: Desplegar en Render
     needs: [version, publicar]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment:
       name: produccion

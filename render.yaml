@@ -13,7 +13,7 @@ services:
     runtime: image
     plan: free
     image:
-      url: ghcr.io/notbutter17/bibliotech-backend:1.0.0
+      url: ghcr.io/notbutter17/bibliotech-backend:latest  # cd.yml fija la versión exacta con el deploy hook (imgURL)
     healthCheckPath: /api/libros
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -34,7 +34,7 @@ services:
     runtime: image
     plan: free
     image:
-      url: ghcr.io/notbutter17/bibliotech-frontend:1.0.0
+      url: ghcr.io/notbutter17/bibliotech-frontend:latest
     envVars:
       # URL pública HTTPS del backend (Render la muestra en el servicio bibliotech-backend)
       - key: BACKEND_URL
