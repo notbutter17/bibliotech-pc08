@@ -1,46 +1,30 @@
 name: BiblioTech CI
 
+# Se ejecuta en cada push (cualquier rama) y en cada pull request hacia develop o main.
 on:
   push:
-    branches: [develop]
+    branches: ['**']
   pull_request:
-    branches: [develop]
+    branches: [develop, main]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   backend:
-    name: Backend - Maven y JUnit
+    name: Backend (mvn verify + JaCoCo)
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_DB: bibliotech_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres -d bibliotech_db"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    env:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/bibliotech_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres_test
-      SPRING_PROFILES_ACTIVE: ci
-
     steps:
       - name: Obtener código
         uses: actions/checkout@v4
 
-      - name: Configurar Java 21
+      - name: Configurar Java 21 con caché de Maven
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -48,18 +32,40 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
-      - name: Ejecutar pruebas del backend
+      # Unitarias + Mockito (surefire), integración (failsafe, H2) y JaCoCo con umbral del 80 %.
+      # -U: vuelve a consultar artefactos marcados como ausentes en una caché envenenada (ver informe U2).
+      - name: Compilar, probar y medir cobertura
         working-directory: backend
-        run: mvn -B test
+        run: mvn -B -U verify
+
+      - name: Resumen de cobertura
+        if: always()
+        working-directory: backend
+        run: |
+          if [ -f target/site/jacoco/jacoco.csv ]; then
+            awk -F, 'NR>1 {lm+=$8; lc+=$9; bm+=$6; bc+=$7} END {printf "### Cobertura JaCoCo\n| Líneas | Ramas |\n|---|---|\n| %.1f %% | %.1f %% |\n", 100*lc/(lm+lc), 100*bc/(bm+bc)}' target/site/jacoco/jacoco.csv >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publicar reportes del backend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-reportes
+          path: |
+            backend/target/site/jacoco/
+            backend/target/surefire-reports/
+            backend/target/failsafe-reports/
+            backend/target/classes/
+          retention-days: 7
 
   frontend:
-    name: Frontend - ESLint y Build
+    name: Frontend (lint + ng test + build)
     runs-on: ubuntu-latest
     steps:
       - name: Obtener código
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
+      - name: Configurar Node.js 22 con caché de npm
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -70,10 +76,97 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Ejecutar ESLint
+      - name: ESLint
         working-directory: frontend
         run: npx ng lint
 
-      - name: Compilar Angular
+      - name: Pruebas Angular con cobertura
+        working-directory: frontend
+        run: npx ng test --watch=false
+
+      - name: Compilar Angular (producción)
         working-directory: frontend
         run: npx ng build
+
+      - name: Publicar cobertura del frontend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-cobertura
+          path: frontend/coverage/
+          retention-days: 7
+
+  sonarcloud:
+    name: SonarCloud (quality gate)
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - name: Obtener código (historial completo para el análisis)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Descargar reportes del backend
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-reportes
+          path: backend/target
+
+      - name: Descargar cobertura del frontend
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-cobertura
+          path: frontend/coverage
+
+      - name: Aviso si falta SONAR_TOKEN
+        if: env.SONAR_TOKEN == ''
+        run: echo "::warning::Configura el secreto SONAR_TOKEN para ejecutar el análisis de SonarCloud."
+
+      - name: Análisis SonarCloud y quality gate
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@v8
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
+
+  seguridad:
+    name: Seguridad (Trivy dependencias y secretos)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 con caché de Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      # Se escanea el jar empaquetado: contiene las versiones exactas de cada dependencia.
+      - name: Empaquetar backend
+        working-directory: backend
+        run: mvn -B -U -q -DskipTests package
+
+      - name: Secretos expuestos en el repositorio
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secret
+          skip-dirs: backend/target
+          exit-code: '1'
+
+      - name: Vulnerabilidades del backend (HIGH/CRITICAL con parche)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: rootfs
+          scan-ref: backend/target/bibliotech_v2-0.0.1-SNAPSHOT.jar
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          format: table
+          exit-code: '1'

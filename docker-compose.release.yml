@@ -1,36 +1,41 @@
+# Igual que docker-compose.yml pero usando las imágenes publicadas en GHCR (sin compilar).
+# Uso: docker compose -f docker-compose.release.yml up -d
 services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d bibliotech_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
   backend:
-    image: ghcr.io/${GHCR_OWNER}/bibliotech-backend:1.0.0
+    image: ghcr.io/${GHCR_OWNER}/bibliotech-backend:${VERSION}
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT:-8080}:8080"
     depends_on:
       db:
         condition: service_healthy
 
   frontend:
-    image: ghcr.io/${GHCR_OWNER}/bibliotech-frontend:1.0.0
+    image: ghcr.io/${GHCR_OWNER}/bibliotech-frontend:${VERSION}
+    environment:
+      BACKEND_URL: http://backend:8080
     ports:
-      - "4200:80"
+      - "${FRONTEND_PORT:-4200}:80"
     depends_on:
       - backend
 

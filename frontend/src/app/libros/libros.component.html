@@ -1,0 +1,81 @@
+<section class="tarjeta">
+  <h2>Registrar libro</h2>
+
+  <form [formGroup]="form" (ngSubmit)="registrar()" novalidate data-cy="form-libro">
+    <div class="campo">
+      <label for="isbn">ISBN</label>
+      <input id="isbn" formControlName="isbn" data-cy="isbn" />
+      @if (invalido('isbn', 'required') || invalido('isbn', 'pattern')) {
+        <small class="error-campo" data-cy="error-isbn">El ISBN es obligatorio.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="titulo">Título</label>
+      <input id="titulo" formControlName="titulo" data-cy="titulo" />
+      @if (invalido('titulo', 'required') || invalido('titulo', 'pattern')) {
+        <small class="error-campo" data-cy="error-titulo">El título es obligatorio.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="autor">Autor</label>
+      <input id="autor" formControlName="autor" data-cy="autor" />
+      @if (invalido('autor', 'required') || invalido('autor', 'pattern')) {
+        <small class="error-campo" data-cy="error-autor">El autor es obligatorio.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="ejemplares">Ejemplares disponibles</label>
+      <input id="ejemplares" type="number" formControlName="ejemplaresDisponibles" data-cy="ejemplares" />
+      @if (invalido('ejemplaresDisponibles', 'min')) {
+        <small class="error-campo" data-cy="error-ejemplares">Los ejemplares no pueden ser negativos.</small>
+      }
+      @if (invalido('ejemplaresDisponibles', 'required')) {
+        <small class="error-campo" data-cy="error-ejemplares">Indica la cantidad de ejemplares.</small>
+      }
+    </div>
+
+    <button type="submit" class="btn-primario" data-cy="btn-registrar-libro">Registrar libro</button>
+  </form>
+
+  @if (mensaje()) {
+    <p class="alerta ok" data-cy="mensaje">{{ mensaje() }}</p>
+  }
+  @if (error()) {
+    <p class="alerta ko" data-cy="error">{{ error() }}</p>
+  }
+</section>
+
+<section class="tarjeta">
+  <h2>Catálogo de libros</h2>
+  <table data-cy="tabla-libros">
+    <thead>
+      <tr>
+        <th>ISBN</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Ejemplares</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (libro of libros(); track libro.id) {
+        <tr data-cy="fila-libro">
+          <td>{{ libro.isbn }}</td>
+          <td>{{ libro.titulo }}</td>
+          <td>{{ libro.autor }}</td>
+          <td data-cy="ejemplares-libro">{{ libro.ejemplaresDisponibles }}</td>
+          <td>
+            <span class="estado" [class.no]="libro.estado !== 'DISPONIBLE'">{{ libro.estado }}</span>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" data-cy="sin-libros">No hay libros registrados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

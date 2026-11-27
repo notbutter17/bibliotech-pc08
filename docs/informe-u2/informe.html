@@ -1,0 +1,186 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Informe Producto U2 · BiblioTech</title>
+<style>
+@page { size: A4; margin: 15mm 14mm 15mm 14mm; }
+body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color:#1d1d1d; line-height:1.36; }
+h2 { color:#173b67; font-size:13pt; border-bottom:2px solid #173b67; padding-bottom:3px; margin:14px 0 7px; }
+h3 { color:#173b67; font-size:10.5pt; margin:10px 0 4px; }
+p { margin:4px 0; }
+ul { margin:2px 0 4px 18px; padding:0; }
+table { border-collapse:collapse; width:100%; font-size:8.8pt; margin:5px 0; }
+th,td { border:1px solid #c5ccd6; padding:3px 5px; text-align:left; vertical-align:top; }
+th { background:#173b67; color:#fff; }
+tr:nth-child(even) td { background:#f4f6f9; }
+code { font-family: Menlo, Consolas, monospace; font-size:7.9pt; }
+.pb { page-break-before:always; }
+.portada { text-align:center; height:240mm; display:flex; flex-direction:column; justify-content:center; }
+.portada .u { font-size:20pt; font-weight:bold; color:#173b67; }
+.portada .t { font-size:21pt; font-weight:bold; color:#173b67; margin:28px 0 6px; }
+.portada .s { font-size:12.5pt; color:#444; }
+.portada .meta { margin:36px auto 0; text-align:left; font-size:10.5pt; line-height:1.8; }
+.fila { display:flex; gap:9px; align-items:flex-start; } .fila > * { flex:1; min-width:0; }
+figure { margin:5px 0; } figure img { width:100%; border:1px solid #ccd; }
+figcaption { font-size:7.8pt; color:#555; text-align:center; }
+.ok { color:#1e7b34; font-weight:bold; } .ko { color:#b00020; font-weight:bold; }
+.pend { background:#fff4e5; color:#a35b00; border:1px solid #f0c27b; border-radius:3px; padding:0 4px; font-size:8pt; font-weight:bold; }
+.nota { background:#eef4fb; border-left:4px solid #1769aa; padding:5px 9px; font-size:9pt; margin:6px 0; }
+</style></head><body>
+
+<section class="portada">
+  <div class="u">UNIVERSIDAD PERUANA UNIÓN</div>
+  <div class="s">Facultad de Ingeniería y Arquitectura · E.P. Ingeniería de Sistemas</div>
+  <div class="t">Pipeline CI/CD y despliegue con contenedores</div>
+  <div class="s">Producto Académico · Unidad 2 · Proyecto BiblioTech</div>
+  <div class="meta">
+    <b>Curso:</b> Pruebas y Despliegue del Software<br>
+    <b>Equipo:</b> PC08<br>
+    <b>Integrantes:</b><br>
+    &nbsp;&nbsp;· Ana Belen Arriaga Poquioma (GitHub: belenarriagap)<br>
+    &nbsp;&nbsp;· Jose Guillermo Ticona Lipa (GitHub: notbutter17)<br>
+    &nbsp;&nbsp;· Jannys Graciela Navarro Acrota (GitHub: Stephmarc)<br>
+    &nbsp;&nbsp;· Willim Yemis Parqui Vilca (GitHub: WILLIMPARQUI)<br>
+    <b>Docente:</b> Dayvis Victor Farfan Gavancho<br>
+    <b>Repositorio:</b> https://github.com/notbutter17/bibliotech-pc08<br>
+    <b>Imágenes:</b> ghcr.io/notbutter17/bibliotech-{backend,frontend}:1.0.0-rc.2 (amd64 + arm64)<br>
+    <b>URL pública (HTTPS):</b> https://bibliotech-frontend-jvov.onrender.com<br>
+    <b>Fecha:</b> 27 de noviembre de 2026
+  </div>
+</section>
+
+<h2 class="pb">1. Diagrama del pipeline: del commit al despliegue</h2>
+<svg viewBox="0 0 980 330" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><text x="10" y="16" font-size="11" font-weight="bold" fill="#5b3fa0">GIT FLOW</text><text x="300" y="16" font-size="11" font-weight="bold" fill="#1769aa">INTEGRACIÓN CONTINUA · ci.yml (cada push y PR)</text><text x="10" y="196" font-size="11" font-weight="bold" fill="#2f6f3e">ENTREGA CONTINUA · cd.yml (merge en main)</text><rect x="10" y="26" width="120" height="62" rx="7" fill="#f4f1fb" stroke="#8a74c4" stroke-width="1.4"/><text x="70.0" y="45" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">1. Commit</text><text x="70.0" y="61" text-anchor="middle" font-size="10" fill="#333">feature/*</text><text x="70.0" y="74" text-anchor="middle" font-size="10" fill="#333">git push</text><rect x="150" y="26" width="120" height="62" rx="7" fill="#f4f1fb" stroke="#8a74c4" stroke-width="1.4"/><text x="210.0" y="45" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">2. Pull request</text><text x="210.0" y="61" text-anchor="middle" font-size="10" fill="#333">→ develop</text><text x="210.0" y="74" text-anchor="middle" font-size="10" fill="#333">GitHub</text><rect x="300" y="26" width="150" height="62" rx="7" fill="#e8f1fb" stroke="#1769aa" stroke-width="1.4"/><text x="375.0" y="45" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">3a. Backend</text><text x="375.0" y="61" text-anchor="middle" font-size="10" fill="#333">mvn verify · JUnit</text><text x="375.0" y="74" text-anchor="middle" font-size="10" fill="#333">Mockito · JaCoCo ≥80 %</text><rect x="300" y="100" width="150" height="62" rx="7" fill="#e8f1fb" stroke="#1769aa" stroke-width="1.4"/><text x="375.0" y="119" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">3b. Frontend</text><text x="375.0" y="135" text-anchor="middle" font-size="10" fill="#333">ESLint · ng test</text><text x="375.0" y="148" text-anchor="middle" font-size="10" fill="#333">(Vitest) · ng build</text><rect x="475" y="26" width="140" height="62" rx="7" fill="#e8f1fb" stroke="#1769aa" stroke-width="1.4"/><text x="545.0" y="45" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">4. SonarCloud</text><text x="545.0" y="61" text-anchor="middle" font-size="10" fill="#333">análisis estático</text><text x="545.0" y="74" text-anchor="middle" font-size="10" fill="#333">quality gate</text><rect x="475" y="100" width="140" height="62" rx="7" fill="#e8f1fb" stroke="#1769aa" stroke-width="1.4"/><text x="545.0" y="119" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">5. Seguridad</text><text x="545.0" y="135" text-anchor="middle" font-size="10" fill="#333">Trivy: secretos y</text><text x="545.0" y="148" text-anchor="middle" font-size="10" fill="#333">CVE del jar</text><rect x="640" y="60" width="140" height="62" rx="7" fill="#f4f1fb" stroke="#8a74c4" stroke-width="1.4"/><text x="710.0" y="79" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">6. Revisión</text><text x="710.0" y="95" text-anchor="middle" font-size="10" fill="#333">1 aprobación de</text><text x="710.0" y="108" text-anchor="middle" font-size="10" fill="#333">un compañero</text><rect x="805" y="60" width="165" height="62" rx="7" fill="#f4f1fb" stroke="#8a74c4" stroke-width="1.4"/><text x="887.5" y="79" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">7. Merge</text><text x="887.5" y="95" text-anchor="middle" font-size="10" fill="#333">develop → main</text><text x="887.5" y="108" text-anchor="middle" font-size="10" fill="#333">(main protegida)</text><rect x="10" y="206" width="165" height="62" rx="7" fill="#e9f6ec" stroke="#2f6f3e" stroke-width="1.4"/><text x="92.5" y="225" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">8. Versión</text><text x="92.5" y="241" text-anchor="middle" font-size="10" fill="#333">VERSION = 1.0.0</text><text x="92.5" y="254" text-anchor="middle" font-size="10" fill="#333">etiqueta v1.0.0</text><rect x="200" y="206" width="175" height="62" rx="7" fill="#e9f6ec" stroke="#2f6f3e" stroke-width="1.4"/><text x="287.5" y="225" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">9. Imágenes</text><text x="287.5" y="241" text-anchor="middle" font-size="10" fill="#333">Docker Buildx (multi-stage)</text><text x="287.5" y="254" text-anchor="middle" font-size="10" fill="#333">→ GHCR :1.0.0 / latest</text><rect x="400" y="206" width="175" height="62" rx="7" fill="#e9f6ec" stroke="#2f6f3e" stroke-width="1.4"/><text x="487.5" y="225" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">10. Despliegue</text><text x="487.5" y="241" text-anchor="middle" font-size="10" fill="#333">deploy hook de Render</text><text x="487.5" y="254" text-anchor="middle" font-size="10" fill="#333">imgURL = …:1.0.0</text><rect x="600" y="206" width="175" height="62" rx="7" fill="#e9f6ec" stroke="#2f6f3e" stroke-width="1.4"/><text x="687.5" y="225" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">11. Prueba de humo</text><text x="687.5" y="241" text-anchor="middle" font-size="10" fill="#333">HTTPS /api/libros</text><text x="687.5" y="254" text-anchor="middle" font-size="10" fill="#333">debe responder 200</text><rect x="800" y="206" width="170" height="62" rx="7" fill="#fff4e5" stroke="#c77700" stroke-width="1.4"/><text x="885.0" y="225" text-anchor="middle" font-weight="bold" font-size="12" fill="#173b67">Producción</text><text x="885.0" y="241" text-anchor="middle" font-size="10" fill="#333">frontend (nginx) → backend</text><text x="885.0" y="254" text-anchor="middle" font-size="10" fill="#333">→ PostgreSQL · HTTPS</text><line x1="130" y1="57" x2="150" y2="57" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="270" y1="57" x2="300" y2="57" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="270" y1="57" x2="300" y2="131" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="450" y1="57" x2="475" y2="57" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="450" y1="131" x2="475" y2="131" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="615" y1="57" x2="640" y2="91" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="615" y1="131" x2="640" y2="91" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="780" y1="91" x2="805" y2="91" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><path d="M887,122 L887,170 L92,170 L92,206" fill="none" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><text x="895" y="150" font-size="9.5" fill="#b00020" text-anchor="start">push a main</text><text x="895" y="162" font-size="9.5" fill="#b00020" text-anchor="start">→ cd.yml</text><line x1="175" y1="237" x2="200" y2="237" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="375" y1="237" x2="400" y2="237" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="575" y1="237" x2="600" y2="237" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><line x1="775" y1="237" x2="800" y2="237" stroke="#444" stroke-width="1.4" marker-end="url(#a)"/><text x="10" y="300" font-size="10" fill="#555">Si un job falla (rojo), el PR no puede integrarse en main: los checks Backend y Frontend son obligatorios por la protección de rama.</text><text x="10" y="316" font-size="10" fill="#555">Secretos: SONAR_TOKEN, RENDER_DEPLOY_HOOK_* en GitHub Secrets · GITHUB_TOKEN para GHCR · DB_* generados por Render (Blueprint render.yaml).</text></svg>
+<table><tr><th>Etapa</th><th>Herramienta</th><th>Archivo</th><th>Falla el pipeline si…</th></tr>
+<tr><td>Control de versiones y revisión</td><td>Git, GitHub (PR + protección de rama)</td><td><code>docs/politica-ramas.md</code></td><td>no hay 1 aprobación o los checks no están en verde</td></tr>
+<tr><td>Compilación y pruebas del backend</td><td>Maven, JUnit 5, Mockito, Spring Test, H2, JaCoCo</td><td><code>ci.yml › backend</code></td><td>alguna de las 62 pruebas falla o la cobertura es &lt; 80 %</td></tr>
+<tr><td>Pruebas del frontend</td><td>ESLint, Vitest + TestBed, Angular CLI</td><td><code>ci.yml › frontend</code></td><td>hay errores de lint, falla alguna de las 24 pruebas o falla el build</td></tr>
+<tr><td>Análisis estático</td><td>SonarCloud</td><td><code>ci.yml › sonarcloud</code>, <code>sonar-project.properties</code></td><td>el quality gate no se aprueba</td></tr>
+<tr><td>Seguridad</td><td>Trivy (secretos + CVE), Dependabot</td><td><code>ci.yml › seguridad</code>, <code>dependabot.yml</code></td><td>hay un secreto o una vulnerabilidad HIGH/CRITICAL con parche</td></tr>
+<tr><td>Imágenes</td><td>Docker Buildx, GHCR, metadata-action (semver)</td><td><code>cd.yml › publicar</code></td><td>falla el build multi-stage</td></tr>
+<tr><td>Despliegue</td><td>Render (Blueprint + deploy hook), HTTPS gestionado</td><td><code>cd.yml › desplegar</code>, <code>render.yaml</code></td><td>la prueba de humo HTTPS no recibe 200</td></tr></table>
+
+<h2>2. Política de ramas y revisión</h2>
+<div class="fila"><div>
+<p><b>Git Flow:</b> <code>main</code> (producción, solo por PR desde <code>develop</code>) · <code>develop</code> (integración) · <code>feature/*</code> y <code>fix/*</code> (trabajo aislado). Commits convencionales (<code>feat:</code>, <code>fix:</code>, <code>ci:</code>, <code>perf:</code>, <code>docs:</code>). La versión semántica vive en el archivo <code>VERSION</code>.</p>
+<p><b>Protección de <code>main</code></b> (aplicada por API, Fig. 2): PR obligatorio con <b>1 aprobación</b>, se descartan aprobaciones viejas, checks <i>Backend</i> y <i>Frontend</i> obligatorios con la rama al día, conversaciones resueltas, sin force-push ni borrado, y <b>también para administradores</b>.</p>
+<p><b>Criterios para aprobar un PR:</b> (1) CI completo en verde; (2) cada regla nueva tiene su prueba; (3) no hay secretos en el diff; (4) la descripción dice qué cambia y cómo probarlo; (5) no quedan conversaciones abiertas; (6) revisa un integrante distinto del autor.</p>
+</div><div style="flex:0.95">
+<figure><img src="../evidencias-u2/t-proteccion.png"><figcaption>Fig. 2 · Protección de main, PR y colaboradores</figcaption></figure>
+<figure><img src="../evidencias-u2/t-git.png"><figcaption>Fig. 1 · <code>git log --graph --oneline --all</code>: feature/* → develop → main</figcaption></figure>
+</div></div>
+<table><tr><th>PR</th><th>Rama → base</th><th>Contenido</th><th>CI</th></tr>
+<tr><td>#6</td><td>feature/estrategia-integral-pruebas → develop</td><td>Unidad 1 (base)</td><td class="ok">✔</td></tr>
+<tr><td>#7</td><td>feature/ci-sonar → develop</td><td>CI, SonarCloud, Trivy, Dependabot</td><td class="ok">✔ (tras 2 fallas corregidas)</td></tr>
+<tr><td>#8</td><td>feature/contenedores-cd → develop</td><td>Dockerfiles, Compose, perfiles, cd.yml</td><td class="ok">✔</td></tr>
+<tr><td>#9</td><td>feature/rendimiento-seguridad → develop</td><td>JMeter, corrección de concurrencia</td><td class="ok">✔</td></tr>
+<tr><td>release</td><td>develop → main</td><td>Versión 1.0.0</td><td><span class="pend">PENDIENTE</span></td></tr></table>
+<p style="font-size:8.8pt">Revisión: los PR #6–#9 esperan la aprobación de belenarriagap / Stephmarc / WILLIMPARQUI <span class="pend">PENDIENTE</span>.</p>
+
+
+<h2>3. Integración continua (ci.yml)</h2>
+<table><tr><th>Job</th><th>Qué hace</th><th>Caché / artefactos</th></tr>
+<tr><td>Backend (mvn verify + JaCoCo)</td><td><code>mvn -B -U verify</code>: 43 pruebas unitarias y Mockito (Surefire) + 19 de integración (Failsafe, H2) + reporte JaCoCo con regla ≥ 80 %. Publica el % de cobertura en el resumen del run.</td><td>caché <code>~/.m2</code> (setup-java, clave = hash de pom.xml) · artefacto <code>backend-reportes</code></td></tr>
+<tr><td>Frontend (lint + ng test + build)</td><td><code>npm ci</code>, <code>ng lint</code>, <code>ng test --watch=false</code> (24 pruebas, cobertura lcov), <code>ng build</code> de producción</td><td>caché npm (package-lock) · artefacto <code>frontend-cobertura</code></td></tr>
+<tr><td>SonarCloud (quality gate)</td><td>Descarga clases + jacoco.xml + lcov y ejecuta el scanner con <code>sonar.qualitygate.wait=true</code>. Sin <code>SONAR_TOKEN</code> emite un aviso y no analiza.</td><td>historial completo (<code>fetch-depth: 0</code>)</td></tr>
+<tr><td>Seguridad (Trivy)</td><td>Escaneo de secretos de todo el repositorio y de CVE HIGH/CRITICAL del jar empaquetado</td><td>caché <code>~/.m2</code></td></tr></table>
+<div class="fila">
+<figure><img src="../evidencias-u2/gh-ci-fallido-trivy.png"><figcaption>Fig. 3 · Ejecución <b>fallida</b> (run 46024852394, PR #7): el job Seguridad detecta 9 CVE HIGH/CRITICAL</figcaption></figure>
+<figure><img src="../evidencias-u2/gh-ci-exitoso.png"><figcaption>Fig. 4 · Ejecución <b>exitosa</b> (run 46025205660) tras la corrección: los 4 jobs en verde</figcaption></figure>
+</div>
+<table><tr><th>Falla</th><th>Causa</th><th>Corrección</th></tr>
+<tr><td><b>F1</b> · Seguridad (run 46024852394)</td><td>Trivy: <i>Total: 9 (HIGH: 5, CRITICAL: 4)</i> en tomcat-embed-core 11.0.24 y jackson 3.1.5, que trae Spring Boot 4.0.8</td><td>Commit <code>5290844</code>: <code>tomcat.version=11.0.25</code> y <code>jackson-bom.version=3.1.7</code> en el pom; 61 pruebas en verde y nuevo escaneo con 0 CVE</td></tr>
+<tr><td><b>F2</b> · Backend/Seguridad (runs 46024844387, 46026007062)</td><td><i>Non-resolvable parent POM … (absent)</i>: un 429 de Maven Central dejó en la caché de Actions el POM padre marcado como ausente, y los jobs que restauraban esa caché fallaban sin reintentar</td><td>Commit <code>061e676</code>: <code>mvn -B -U</code> (fuerza a reconsultar los artefactos ausentes). Los PR #8 y #9 pasaron a verde</td></tr>
+<tr><td>F3 · histórico (run 44672379220)</td><td>Error controlado introducido en la validación de estudiante (práctica de la Sesión 8)</td><td>Commit <code>fix: corregir validacion de estudiante suspendido</code> → run 44672559982 en verde</td></tr></table>
+<figure style="width:80%;margin:auto"><img src="../evidencias-u2/t-cache.png"><figcaption>Fig. 5 · Log de F2 y su corrección</figcaption></figure>
+<div class="fila"><div style="flex:1.25"><figure><img src="../evidencias-u2/t-sonar.png"><figcaption>Fig. 6 · SonarCloud desde el CI (PR #9): <b>QUALITY GATE STATUS: PASSED</b> y condiciones del gate</figcaption></figure></div>
+<div><p><b>SonarCloud (interpretación):</b> el job importa la cobertura de JaCoCo (backend) y lcov (Angular) y espera el veredicto del quality gate <i>Sonar way</i>, que se evalúa sobre el código nuevo:</p>
+<ul><li><b>Cobertura del código nuevo: 96,6 %</b> (umbral 80 %).</li>
+<li>Duplicación: 0 %.</li>
+<li>Calificaciones de confiabilidad, seguridad y mantenibilidad: <b>A</b>.</li>
+<li>Security hotspots: 0 (100 % revisados).</li>
+<li>Bugs, vulnerabilidades y code smells: 0, sobre 884 líneas.</li></ul>
+<p>El primer análisis automático de <code>main</code> (código anterior a la Unidad 1) marcaba 12 issues y 0 % de cobertura. Para que la cobertura y el gate se calculen en el CI, se desactivó <i>Automatic Analysis</i>.</p></div></div>
+
+<h2>4. Contenedores y Docker Compose</h2>
+<table><tr><th></th><th>Etapa 1 (build)</th><th>Etapa 2 (ejecución)</th><th>Decisiones</th></tr>
+<tr><td><b>backend/Dockerfile</b></td><td><code>eclipse-temurin:21-jdk</code>: copia el pom y el wrapper, ejecuta <code>dependency:go-offline</code> (capa en caché mientras el pom no cambie) y luego <code>package -DskipTests</code></td><td><code>eclipse-temurin:21-jre</code> con solo <code>app.jar</code>, usuario sin privilegios <code>biblio</code></td><td>Las pruebas ya corren en CI; <code>SPRING_PROFILES_ACTIVE=prod</code>; <code>JAVA_OPTS=-XX:MaxRAMPercentage=75</code> para el plan de 512 MB</td></tr>
+<tr><td><b>frontend/Dockerfile</b></td><td><code>node:22-alpine</code>: <code>npm ci</code> + <code>ng build --configuration production</code></td><td><code>nginx:1.29-alpine</code> con el <code>dist/</code> y la plantilla <code>nginx.conf.template</code></td><td>Imagen de 92 MB. nginx sirve Angular y reenvía <code>/api</code> a <code>${BACKEND_URL}</code>, así el frontend consume el backend por el mismo origen (sin CORS)</td></tr></table>
+<div class="fila"><div>
+<table><tr><th>Variable (.env)</th><th>Uso</th></tr>
+<tr><td><code>DB_NAME</code>, <code>DB_USERNAME</code></td><td>Base y usuario de PostgreSQL; el backend los recibe como <code>DB_*</code></td></tr>
+<tr><td><code>DB_PASSWORD</code></td><td>Contraseña: solo en <code>.env</code> (ignorado por git). <code>.env.example</code> lleva <code>cambia_esta_clave</code></td></tr>
+<tr><td><code>GHCR_OWNER</code>, <code>VERSION</code></td><td>Nombre de las imágenes <code>ghcr.io/&lt;owner&gt;/bibliotech-*:&lt;versión&gt;</code></td></tr>
+<tr><td><code>BACKEND_PORT</code>, <code>FRONTEND_PORT</code></td><td>Puertos publicados (8080 y 4200)</td></tr>
+<tr><td><code>BACKEND_URL</code> (servicio frontend)</td><td><code>http://backend:8080</code> en Compose; la URL HTTPS del backend en Render</td></tr></table>
+<p><b>Compose:</b> <code>db</code> (postgres:17 con <code>init.sql</code> y healthcheck <code>pg_isready</code>) → <code>backend</code> (<code>depends_on: service_healthy</code>, perfil prod) → <code>frontend</code>. Volumen <code>postgres_data</code>, <code>restart: unless-stopped</code>. <code>docker-compose.release.yml</code> usa las imágenes publicadas en lugar de compilarlas.</p>
+<p class="nota">Verificado en local: los 3 contenedores en ejecución; Newman <b>36/36</b> aserciones y Cypress <b>6/6</b> contra los contenedores (entrada por nginx :4200).</p>
+</div><div style="flex:1.1"><figure><img src="../evidencias-u2/t-docker.png"><figcaption>Fig. 7 · <code>docker compose up -d --build</code>, <code>ps</code>, imágenes y suites de la U1 contra los contenedores</figcaption></figure></div></div>
+
+<h2>5. Entrega continua</h2>
+<table><tr><th>Aspecto</th><th>Implementación</th><th>Estado</th></tr>
+<tr><td>Versionado</td><td>SemVer en <code>VERSION</code> (1.0.0). <code>cd.yml</code> etiqueta las imágenes con <code>1.0.0</code>, <code>latest</code> y <code>sha-&lt;commit&gt;</code>, y crea la etiqueta git <code>v1.0.0</code>. Una etiqueta <code>vX.Y.Z</code> también dispara el workflow</td><td class="ok">Listo</td></tr>
+<tr><td>Imágenes publicadas</td><td>Paquetes <b>públicos</b> en GHCR: <code>bibliotech-backend</code> y <code>bibliotech-frontend</code> con las etiquetas <code>1.0.0-rc.2</code>, <code>latest</code> y <code>sha-…</code>, en <b>linux/amd64 + linux/arm64</b> (Fig. 8). Las etiquetas <code>vX.Y.Z-rc.N</code> publican candidatas; la <code>1.0.0</code> definitiva sale al integrar el PR de release en <code>main</code></td><td class="ok">Publicadas (rc.2)</td></tr>
+<tr><td>Despliegue</td><td>Render, plan gratuito, con el Blueprint <code>render.yaml</code>: PostgreSQL + <code>bibliotech-backend-6c63</code> + <code>bibliotech-frontend-jvov</code>. HTTPS con certificado de Google Trust Services. El frontend consume al backend desplegado a través de <code>/api</code> (Fig. 9). Al integrar en <code>main</code>, <code>cd.yml</code> llama a los deploy hooks (secretos ya configurados) con <code>imgURL=…:X.Y.Z</code> y hace la prueba de humo</td><td class="ok">En línea (HTTPS) · despliegue automático al integrar en main</td></tr>
+<tr><td>Secretos</td><td>GitHub Secrets (configurados): <code>SONAR_TOKEN</code>, <code>RENDER_DEPLOY_HOOK_BACKEND</code>, <code>RENDER_DEPLOY_HOOK_FRONTEND</code>. <code>GITHUB_TOKEN</code> automático para GHCR. Las credenciales de la BD las genera Render. Trivy confirma <b>0 secretos</b> en el repositorio y <code>.env</code> está en <code>.gitignore</code></td><td class="ok">0 secretos en el repo</td></tr>
+<tr><td>Perfiles Spring</td><td><code>dev</code>: PostgreSQL local, <code>show-sql</code>, DEBUG. <code>prod</code>: <code>DB_HOST/PORT/NAME/USERNAME/PASSWORD</code> sin valores por defecto (si falta uno, no arranca), pool de 5 conexiones, sin stacktrace. Las pruebas usan H2 y el perfil <code>ci</code> usa PostgreSQL en Actions</td><td class="ok">Listo (prod verificado en Compose)</td></tr></table>
+<p><b>Hallazgo E1:</b> el <code>docker pull</code> del docente fallaba en Mac con Apple Silicon con el error <i>no matching manifest for linux/arm64</i>, porque las imágenes se construían solo para amd64. <b>Acción:</b> se agregaron QEMU y <code>platforms: linux/amd64,linux/arm64</code> en <code>cd.yml</code> y se publicó <code>v1.0.0-rc.2</code>; <code>docker pull</code> ya funciona en ambas arquitecturas (Fig. 10).</p>
+<div class="fila">
+<figure><img src="../evidencias-u2/ghcr-backend.png"><figcaption>Fig. 8 · Paquete público en GHCR con etiquetas versionadas</figcaption></figure>
+<figure><img src="../evidencias-u2/render-prestamos-https.png"><figcaption>Fig. 9 · BiblioTech en Render con HTTPS: el frontend consume al backend desplegado</figcaption></figure>
+</div>
+<figure style="width:88%;margin:auto"><img src="../evidencias-u2/t-deploy.png"><figcaption>Fig. 10 · <code>docker pull</code> de las imágenes publicadas, respuesta HTTPS, API vía nginx y certificado TLS</figcaption></figure>
+<h3>Estrategia de entrega: blue-green</h3>
+<p>BiblioTech corre <b>una instancia por servicio</b>, así que <i>rolling</i> se reduce a reemplazar la única instancia. <i>Canary</i> necesita tráfico suficiente para que un 5 % sea representativo, y una biblioteca universitaria no lo tiene. Con <b>blue-green</b>, la versión nueva (green) arranca en paralelo y Render solo le pasa el tráfico cuando responde el health check (<code>/api/libros</code>). Si falla, la versión anterior (blue) sigue sirviendo, sin caída.</p>
+<p><b>Rollback:</b> (1) automático si green no pasa el health check; (2) en Render → <i>Deploys → Rollback</i>, o llamando al hook con la imagen anterior (<code>imgURL=…:1.0.0</code>), porque las imágenes versionadas son inmutables; (3) <code>git revert</code> del merge → PR → <code>cd.yml</code> publica X.Y.(Z+1). Los cambios de esquema son solo aditivos, así que blue sigue funcionando con la base de green.</p>
+
+<h2>6. Rendimiento (JMeter 5.6.3)</h2>
+<p>Plan <code>performance/bibliotech-plan.jmx</code>:</p>
+<ul>
+<li><b>setUp</b>: crea un libro con 100 000 ejemplares.</li>
+<li><b>Catálogo</b>: <code>GET /api/libros</code>.</li>
+<li><b>Préstamos</b>: <code>POST /api/estudiantes</code> + <code>POST /api/prestamos</code>; cada iteración usa un estudiante nuevo para no chocar con el límite de 3 préstamos.</li>
+<li><b>Aserciones</b>: código HTTP esperado y SLA ≤ 500 ms.</li>
+<li><b>tearDown</b>: verifica que el stock final = 100 000 − préstamos exitosos.</li>
+</ul>
+<p>Se ejecutó contra Docker Compose, entrando por nginx (:4200).</p>
+<table><tr><th>Escenario</th><th>Endpoint</th><th>Peticiones</th><th>Prom.</th><th>p90</th><th>p95</th><th>Máx</th><th>% error</th><th>req/s</th><th>Integridad del stock</th></tr>
+<tr><td rowspan="2">Nominal: 50 + 25 usuarios, rampa 10 s</td><td>GET /api/libros</td><td>1000</td><td>2,7</td><td>5</td><td>6</td><td>83</td><td>0 %</td><td>99,5</td><td rowspan="2" class="ok">OK</td></tr>
+<tr><td>POST /api/prestamos</td><td>200</td><td>5,0</td><td>8</td><td>9</td><td>85</td><td>0 %</td><td>19,9</td></tr>
+<tr><td rowspan="2">Estrés: 100 + 100 usuarios, rampa 1 s</td><td>GET /api/libros</td><td>2000</td><td>22,5</td><td>53</td><td>67</td><td>145</td><td>0 %</td><td>1270,6</td><td rowspan="2" class="ko">FALLA: 99 633 (esperado 99 000)</td></tr>
+<tr><td>POST /api/prestamos</td><td>1000</td><td>25,8</td><td>58</td><td>70</td><td>141</td><td>0 %</td><td>635,3</td></tr>
+<tr><td rowspan="2">Estrés tras la corrección</td><td>GET /api/libros</td><td>2000</td><td>72,2</td><td>153</td><td>182</td><td>382</td><td>0 %</td><td>727,3</td><td rowspan="2" class="ok">OK: 99 000</td></tr>
+<tr><td>POST /api/prestamos</td><td>1000</td><td>81,1</td><td>173</td><td>193</td><td>388</td><td>0 %</td><td>363,6</td></tr>
+<tr><td rowspan="2">Nominal tras la corrección</td><td>GET /api/libros</td><td>1000</td><td>1,7</td><td>3</td><td>4</td><td>55</td><td>0 %</td><td>98,9</td><td rowspan="2" class="ok">OK</td></tr>
+<tr><td>POST /api/prestamos</td><td>200</td><td>3,3</td><td>5</td><td>7</td><td>15</td><td>0 %</td><td>19,8</td></tr></table>
+<p style="font-size:8pt;color:#555">Tiempos en ms. Equipo: MacBook (Apple Silicon), Docker Desktop. Reportes HTML en <code>performance/resultados/</code>.</p>
+<div class="fila">
+<figure><img src="../evidencias-u2/jmeter-estres.png"><figcaption>Fig. 11 · Estrés antes de la corrección: la verificación del stock falla</figcaption></figure>
+<figure><img src="../evidencias-u2/jmeter-estres-corregido.png"><figcaption>Fig. 12 · Estrés tras la corrección: 0 % de errores e integridad OK</figcaption></figure>
+</div>
+<p><b>Hallazgo R1 (defecto real):</b> bajo estrés, <b>1000 préstamos descontaron solo 367 ejemplares</b>. Es una <i>actualización perdida</i>: dos transacciones leen el mismo stock y ambas escriben stock − 1. Ya se había anotado como riesgo H7 en la Unidad 1.</p>
+<p><b>Acción:</b> <code>LibroRepository.findByIdParaActualizar</code> con <code>@Lock(PESSIMISTIC_WRITE)</code> (SELECT … FOR UPDATE) en <code>registrarPrestamo</code> y <code>devolverLibro</code>, más la prueba de regresión <code>prestamosConcurrentes_noPierdenActualizaciones</code> (20 hilos), que sin el bloqueo falla con <i>expected 30 but was 47</i>.</p>
+<p><b>Costo:</b> con 100 usuarios concurrentes sobre el mismo libro, el p95 sube de 70 a 193 ms porque los préstamos se serializan. Con carga nominal no hay impacto (p95 7 ms), y todo queda bajo el SLA de 500 ms.</p>
+<p><b>Hallazgo R2 (riesgo):</b> <code>GET /api/libros</code> no está paginado, así que la respuesta crece con el catálogo. <b>Acción propuesta:</b> paginar con <code>Pageable</code> en la próxima versión (1.1.0).</p>
+
+<h2>7. Seguridad: escaneo de dependencias (Trivy)</h2>
+<figure><img src="../evidencias-u2/t-trivy.png"><figcaption>Fig. 13 · Trivy sobre el jar del backend: antes (11 CVE), falla en CI, después (0 CVE) y escaneo de secretos (0)</figcaption></figure>
+<table><tr><th>#</th><th>Librería</th><th>CVE</th><th>Sev.</th><th>Riesgo para BiblioTech</th><th>Acción</th><th>Resultado</th></tr>
+<tr><td>1–4</td><td>tomcat-embed-core 11.0.24</td><td>CVE-2026-65182, -65637, -65905, -68525</td><td>CRITICAL</td><td>Evasión de restricciones, HTTP/2 y bypass de autenticación DIGEST/FORM en el servidor embebido expuesto a Internet</td><td><code>tomcat.version=11.0.25</code></td><td class="ok">Corregido</td></tr>
+<tr><td>5–6</td><td>jackson-core 3.1.5</td><td>CVE-2026-89407, -89425</td><td>HIGH</td><td>Denegación de servicio con JSON malicioso en <code>POST /api/*</code></td><td><code>jackson-bom.version=3.1.7</code></td><td class="ok">Corregido</td></tr>
+<tr><td>7–9</td><td>jackson-databind 3.1.5</td><td>CVE-2026-68497, -91776, -91777</td><td>HIGH</td><td>DoS de CPU y memoria al deserializar los cuerpos de los endpoints</td><td>idem</td><td class="ok">Corregido</td></tr>
+<tr><td>10–11</td><td>jackson-databind 3.1.5</td><td>CVE-2026-19032, -83557</td><td>MEDIUM</td><td>Resolución de esquemas URI en <code>Path</code> (BiblioTech no deserializa <code>Path</code>)</td><td>idem</td><td class="ok">Corregido</td></tr>
+<tr><td>12</td><td>Repositorio completo</td><td>Escaneo de secretos</td><td>—</td><td>Exposición de credenciales</td><td><code>.env</code> en .gitignore; secretos en GitHub Secrets y Render</td><td class="ok">0 hallazgos</td></tr></table>
+<p><b>Prevención continua:</b> el job <i>Seguridad</i> corre en cada push y bloquea el PR si aparece una vulnerabilidad HIGH/CRITICAL con parche. Dependabot abre PR semanales hacia <code>develop</code> para Maven, npm y Actions. Tras la corrección, las 62 pruebas del backend siguen en verde y la cobertura es de 96,6 % (líneas) y 100 % (ramas).</p>
+
+<h2>8. Estado de la entrega</h2>
+<table><tr><th>Requisito de la guía</th><th>Mínimo</th><th>Estado</th></tr>
+<tr><td>Flujo Git: develop, feature/*, PR revisados, main protegida</td><td>3 PR</td><td>4 PR abiertos (#6–#9) con CI en verde; main protegida ✔ · aprobación de compañeros <span class="pend">PENDIENTE</span></td></tr>
+<tr><td>Análisis estático: SonarCloud y quality gate</td><td>1</td><td class="ok">Cumplido: quality gate PASSED (cobertura 96,6 %, 0 bugs, 0 vulnerabilidades)</td></tr>
+<tr><td>CI: ci.yml en cada push/PR, mvn verify, ng test, cobertura, caché</td><td>1 workflow</td><td class="ok">Cumplido, con evidencia de 2 fallas corregidas</td></tr>
+<tr><td>Dos Dockerfile multi-stage</td><td>2</td><td class="ok">Cumplido</td></tr>
+<tr><td>docker-compose.yml, variables en .env, solo .env.example</td><td>1</td><td class="ok">Cumplido (verificado en local)</td></tr>
+<tr><td>cd.yml publica 2 imágenes con versión</td><td>2 imágenes</td><td class="ok">Cumplido: 2 imágenes públicas 1.0.0-rc.2 multi-arquitectura; la 1.0.0 sale al integrar en main</td></tr>
+<tr><td>Despliegue automático con URL pública y HTTPS</td><td>1</td><td class="ok">En línea: https://bibliotech-frontend-jvov.onrender.com · deploy hooks en GitHub Secrets; el primer despliegue automático ocurre al integrar en main</td></tr>
+<tr><td>Secretos solo en GitHub Secrets; perfiles dev y prod</td><td>0 en el repo</td><td class="ok">Cumplido (Trivy: 0 secretos)</td></tr>
+<tr><td>Estrategia de entrega y rollback</td><td>1</td><td class="ok">Blue-green documentada</td></tr>
+<tr><td>Plan JMeter (GET libros, POST préstamos)</td><td>1 plan</td><td class="ok">Cumplido, con un defecto real hallado y corregido</td></tr>
+<tr><td>Escaneo de dependencias con tabla y acciones</td><td>1 reporte</td><td class="ok">Cumplido: 11 CVE corregidos</td></tr></table>
+</body></html>
