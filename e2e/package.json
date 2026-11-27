@@ -1,0 +1,13 @@
+{
+  "name": "bibliotech-e2e",
+  "private": true,
+  "description": "Pruebas E2E de BiblioTech con Cypress (requiere backend en :8080 y frontend en :4200)",
+  "scripts": {
+    "cy:run": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^16.1.0",
+    "typescript": "~6.0.2"
+  }
+}

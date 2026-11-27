@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="BiblioTech API · Producto U1" tests="18" time="0.185">
+  <testsuite name="Libros (RN-01) / GET libros · 200 lista con estado" id="a225b56e-3b87-4524-84ac-883b9a943ba6" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="Status 200" time="0.012" classname="LibrosRn01GetLibros200ListaConEstado"/>
+    <testcase name="Es un arreglo y cada libro trae estado calculado" time="0.012" classname="LibrosRn01GetLibros200ListaConEstado"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / POST libro válido · 201" id="402325d6-67ea-4e9f-9164-4719695d0c93" timestamp="2026-11-27T14:50:13.233Z" tests="3" failures="0" errors="0" time="0.105">
+    <testcase name="Status 201" time="0.105" classname="LibrosRn01PostLibroValido201"/>
+    <testcase name="Cuerpo: id, ISBN y estado DISPONIBLE" time="0.105" classname="LibrosRn01PostLibroValido201"/>
+    <testcase name="Header Location" time="0.105" classname="LibrosRn01PostLibroValido201"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / POST libro sin ISBN · 400" id="23cd4473-1655-4274-afac-46f724f60c2c" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 400" time="0.004" classname="LibrosRn01PostLibroSinIsbn400"/>
+    <testcase name="Mensaje: El ISBN es obligatorio" time="0.004" classname="LibrosRn01PostLibroSinIsbn400"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / POST libro ejemplares negativos · 400" id="42072e10-2e95-4792-abc1-263b6a8c7221" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="LibrosRn01PostLibroEjemplaresNegativos400"/>
+    <testcase name="Mensaje: no pueden ser negativos" time="0.002" classname="LibrosRn01PostLibroEjemplaresNegativos400"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / POST libro ISBN duplicado · 409" id="eb386cfe-d165-4486-96d6-62da8b2f1fc4" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 409" time="0.003" classname="LibrosRn01PostLibroIsbnDuplicado409"/>
+    <testcase name="Mensaje: Ya existe un libro con el ISBN" time="0.003" classname="LibrosRn01PostLibroIsbnDuplicado409"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / POST libro sin ejemplares (borde 0) · 201 NO DISPONIBLE" id="0e14fe36-8d3c-41f6-b8d6-50fdca9b1eb6" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 201" time="0.002" classname="LibrosRn01PostLibroSinEjemplaresBorde0201NoDisponible"/>
+    <testcase name="Estado NO DISPONIBLE" time="0.002" classname="LibrosRn01PostLibroSinEjemplaresBorde0201NoDisponible"/>
+  </testsuite>
+  <testsuite name="Libros (RN-01) / GET libro inexistente · 404" id="d55d48e1-4298-4a69-89a9-635d484fa9d7" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 404" time="0.005" classname="LibrosRn01GetLibroInexistente404"/>
+    <testcase name="Mensaje: no existe" time="0.005" classname="LibrosRn01GetLibroInexistente404"/>
+  </testsuite>
+  <testsuite name="Estudiantes (RN-02) / POST estudiante · 201 ACTIVO" id="97815012-f6a7-4742-adfe-8d84293dfcf0" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status 201" time="0.006" classname="EstudiantesRn02PostEstudiante201Activo"/>
+    <testcase name="Estado inicial ACTIVO aunque se envíe otro" time="0.006" classname="EstudiantesRn02PostEstudiante201Activo"/>
+  </testsuite>
+  <testsuite name="Estudiantes (RN-02) / POST estudiante DNI duplicado · 409" id="a810d822-d329-4825-b6b8-c08a035f2ffe" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 409" time="0.003" classname="EstudiantesRn02PostEstudianteDniDuplicado409"/>
+    <testcase name="Mensaje: Ya existe un estudiante con el DNI" time="0.003" classname="EstudiantesRn02PostEstudianteDniDuplicado409"/>
+  </testsuite>
+  <testsuite name="Estudiantes (RN-02) / POST estudiante sin nombre · 400" id="72285534-d623-4365-a10b-70b65ded4f6c" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="EstudiantesRn02PostEstudianteSinNombre400"/>
+    <testcase name="Mensaje: El nombre es obligatorio" time="0.002" classname="EstudiantesRn02PostEstudianteSinNombre400"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / POST préstamo válido · 201 baja ejemplar" id="e971be43-cfc9-43f3-9589-9439b72efe28" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.024">
+    <testcase name="Status 201" time="0.024" classname="PrestamosRn03Rn04PostPrestamoValido201BajaEjemplar"/>
+    <testcase name="Préstamo ACTIVO y el libro baja de 2 a 1" time="0.024" classname="PrestamosRn03Rn04PostPrestamoValido201BajaEjemplar"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / POST préstamo libro sin ejemplares · 409" id="7a51f04b-cab1-40b8-bb85-a67c08a42ed2" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 409" time="0.002" classname="PrestamosRn03Rn04PostPrestamoLibroSinEjemplares409"/>
+    <testcase name="Mensaje: no tiene ejemplares disponibles" time="0.002" classname="PrestamosRn03Rn04PostPrestamoLibroSinEjemplares409"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / POST préstamo libro inexistente · 404" id="3202c798-1dad-4136-bf03-baf31cf60d41" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 404" time="0.002" classname="PrestamosRn03Rn04PostPrestamoLibroInexistente404"/>
+    <testcase name="Mensaje: El libro no existe" time="0.002" classname="PrestamosRn03Rn04PostPrestamoLibroInexistente404"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / POST préstamo estudiante inexistente · 409" id="8632c12c-422b-4264-9250-6354187af24d" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 409" time="0.004" classname="PrestamosRn03Rn04PostPrestamoEstudianteInexistente409"/>
+    <testcase name="Mensaje: no existe o no está ACTIVO" time="0.004" classname="PrestamosRn03Rn04PostPrestamoEstudianteInexistente409"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / POST préstamo sin libroId · 400" id="5d376927-bd6a-45ce-a882-454d62930105" timestamp="2026-11-27T14:50:13.233Z" tests="1" failures="0" errors="0" time="0.001">
+    <testcase name="Status 400" time="0.001" classname="PrestamosRn03Rn04PostPrestamoSinLibroId400"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / PUT devolución · 200 DEVUELTO" id="3532e848-d23a-4e85-87fc-d8ff6ed2a2e3" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 200" time="0.004" classname="PrestamosRn03Rn04PutDevolucion200Devuelto"/>
+    <testcase name="Préstamo DEVUELTO y el libro recupera el ejemplar" time="0.004" classname="PrestamosRn03Rn04PutDevolucion200Devuelto"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / PUT devolución repetida · 409" id="9e94d1ae-7ee7-4140-9582-25530a3f0e7f" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 409" time="0.002" classname="PrestamosRn03Rn04PutDevolucionRepetida409"/>
+    <testcase name="Mensaje: ya fue devuelto" time="0.002" classname="PrestamosRn03Rn04PutDevolucionRepetida409"/>
+  </testsuite>
+  <testsuite name="Préstamos (RN-03 / RN-04) / PUT devolución inexistente · 404" id="f97a4a50-643d-462e-b844-e01cd51109da" timestamp="2026-11-27T14:50:13.233Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 404" time="0.002" classname="PrestamosRn03Rn04PutDevolucionInexistente404"/>
+    <testcase name="Mensaje: El préstamo no existe" time="0.002" classname="PrestamosRn03Rn04PutDevolucionInexistente404"/>
+  </testsuite>
+</testsuites>

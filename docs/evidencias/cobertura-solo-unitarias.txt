@@ -1,0 +1,10 @@
+PrestamoRequest 0 / 1
+GlobalExceptionHandler 0 / 6
+PrestamoController 0 / 9
+EstudianteController 0 / 6
+LibroController 0 / 7
+CorsConfig 0 / 5
+Estudiante 14 / 16
+Prestamo 13 / 18
+Libro 14 / 19
+SOLO mvn test -> lineas 73.3% ramas 91.3%
