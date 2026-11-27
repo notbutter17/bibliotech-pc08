@@ -32,10 +32,11 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
-      # Unitarias + Mockito (surefire), integración (failsafe, H2) y JaCoCo con umbral del 80 %
+      # Unitarias + Mockito (surefire), integración (failsafe, H2) y JaCoCo con umbral del 80 %.
+      # -U: vuelve a consultar artefactos marcados como ausentes en una caché envenenada (ver informe U2).
       - name: Compilar, probar y medir cobertura
         working-directory: backend
-        run: mvn -B verify
+        run: mvn -B -U verify
 
       - name: Resumen de cobertura
         if: always()
@@ -148,7 +149,7 @@ jobs:
       # Se escanea el jar empaquetado: contiene las versiones exactas de cada dependencia.
       - name: Empaquetar backend
         working-directory: backend
-        run: mvn -B -q -DskipTests package
+        run: mvn -B -U -q -DskipTests package
 
       - name: Secretos expuestos en el repositorio
         uses: aquasecurity/trivy-action@v0.36.0
