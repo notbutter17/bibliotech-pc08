@@ -48,7 +48,7 @@ class PrestamoServiceTest {
     void registrarPrestamo_exitoso() {
         // Arrange
         Libro libro = new Libro("978-1", "Clean Code", "Robert Martin", 3);
-        when(libroRepository.findById(1L)).thenReturn(Optional.of(libro));
+        when(libroRepository.findByIdParaActualizar(1L)).thenReturn(Optional.of(libro));
         when(estudianteRepository.findById(1L)).thenReturn(Optional.of(activo));
         when(prestamoRepository.countByEstudianteIdAndEstado(1L, Prestamo.ACTIVO)).thenReturn(0L);
         when(prestamoRepository.save(any(Prestamo.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -70,7 +70,7 @@ class PrestamoServiceTest {
     @DisplayName("Rechazo · libro inexistente: never() consulta estudiante ni guarda")
     void registrarPrestamo_libroNoExiste() {
         // Arrange
-        when(libroRepository.findById(9L)).thenReturn(Optional.empty());
+        when(libroRepository.findByIdParaActualizar(9L)).thenReturn(Optional.empty());
         // Act
         assertThrows(RecursoNoEncontradoException.class, () -> prestamoService.registrarPrestamo(1L, 9L));
         // Assert
@@ -83,7 +83,7 @@ class PrestamoServiceTest {
     @DisplayName("Rechazo · sin ejemplares: never(save)")
     void registrarPrestamo_sinEjemplares() {
         // Arrange
-        when(libroRepository.findById(1L)).thenReturn(Optional.of(new Libro("978-1", "T", "A", 0)));
+        when(libroRepository.findByIdParaActualizar(1L)).thenReturn(Optional.of(new Libro("978-1", "T", "A", 0)));
         // Act
         assertThrows(ReglaNegocioException.class, () -> prestamoService.registrarPrestamo(1L, 1L));
         // Assert
@@ -95,7 +95,7 @@ class PrestamoServiceTest {
     @DisplayName("Rechazo · estudiante inexistente: never(countBy...) ni save")
     void registrarPrestamo_estudianteNoExiste() {
         // Arrange
-        when(libroRepository.findById(1L)).thenReturn(Optional.of(new Libro("978-1", "T", "A", 2)));
+        when(libroRepository.findByIdParaActualizar(1L)).thenReturn(Optional.of(new Libro("978-1", "T", "A", 2)));
         when(estudianteRepository.findById(7L)).thenReturn(Optional.empty());
         // Act
         assertThrows(ReglaNegocioException.class, () -> prestamoService.registrarPrestamo(7L, 1L));
@@ -109,7 +109,7 @@ class PrestamoServiceTest {
     void registrarPrestamo_limiteAlcanzado() {
         // Arrange
         Libro libro = new Libro("978-1", "T", "A", 2);
-        when(libroRepository.findById(1L)).thenReturn(Optional.of(libro));
+        when(libroRepository.findByIdParaActualizar(1L)).thenReturn(Optional.of(libro));
         when(estudianteRepository.findById(1L)).thenReturn(Optional.of(activo));
         when(prestamoRepository.countByEstudianteIdAndEstado(1L, Prestamo.ACTIVO)).thenReturn(3L);
         // Act

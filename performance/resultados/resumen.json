@@ -1,0 +1,74 @@
+{
+ "antes|GET /api/libros": {
+  "n": 1000,
+  "avg": 2.7,
+  "p90": 5,
+  "p95": 6,
+  "max": 83,
+  "err": 0.0,
+  "tput": 99.5
+ },
+ "antes|POST /api/prestamos": {
+  "n": 200,
+  "avg": 5.0,
+  "p90": 8,
+  "p95": 9,
+  "max": 85,
+  "err": 0.0,
+  "tput": 19.9
+ },
+ "estres|GET /api/libros": {
+  "n": 2000,
+  "avg": 22.5,
+  "p90": 53,
+  "p95": 67,
+  "max": 145,
+  "err": 0.0,
+  "tput": 1270.6
+ },
+ "estres|POST /api/prestamos": {
+  "n": 1000,
+  "avg": 25.8,
+  "p90": 58,
+  "p95": 70,
+  "max": 141,
+  "err": 0.0,
+  "tput": 635.3
+ },
+ "estres-corregido|GET /api/libros": {
+  "n": 2000,
+  "avg": 72.2,
+  "p90": 153,
+  "p95": 182,
+  "max": 382,
+  "err": 0.0,
+  "tput": 727.3
+ },
+ "estres-corregido|POST /api/prestamos": {
+  "n": 1000,
+  "avg": 81.1,
+  "p90": 173,
+  "p95": 193,
+  "max": 388,
+  "err": 0.0,
+  "tput": 363.6
+ },
+ "nominal-corregido|GET /api/libros": {
+  "n": 1000,
+  "avg": 1.7,
+  "p90": 3,
+  "p95": 4,
+  "max": 55,
+  "err": 0.0,
+  "tput": 98.9
+ },
+ "nominal-corregido|POST /api/prestamos": {
+  "n": 200,
+  "avg": 3.3,
+  "p90": 5,
+  "p95": 7,
+  "max": 15,
+  "err": 0.0,
+  "tput": 19.8
+ }
+}

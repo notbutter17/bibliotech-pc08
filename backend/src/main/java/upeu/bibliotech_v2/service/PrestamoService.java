@@ -42,7 +42,7 @@ public class PrestamoService {
      */
     @Transactional
     public Prestamo registrarPrestamo(Long estudianteId, Long libroId) {
-        Libro libro = libroRepository.findById(libroId).orElse(null);                       // N1
+        Libro libro = libroRepository.findByIdParaActualizar(libroId).orElse(null);         // N1 (fila bloqueada)
         if (libro == null) {                                                                 // N1 · D1
             throw new RecursoNoEncontradoException("El libro no existe");                    // N2
         }
@@ -77,7 +77,8 @@ public class PrestamoService {
         if (!Prestamo.ACTIVO.equals(prestamo.getEstado())) {                                 // N3 · D2
             throw new ReglaNegocioException("El préstamo ya fue devuelto");                  // N4
         }
-        Libro libro = prestamo.getLibro();                                                   // N5
+        Libro libro = libroRepository.findByIdParaActualizar(prestamo.getLibro().getId())    // N5 (fila bloqueada)
+                .orElse(prestamo.getLibro());
         libro.setEjemplaresDisponibles(libro.getEjemplaresDisponibles() + 1);
         libroRepository.save(libro);
         prestamo.setEstado(Prestamo.DEVUELTO);

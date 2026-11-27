@@ -43,7 +43,7 @@ class CaminoBasicoRegistrarPrestamoTest {
     @DisplayName("C1 · 1→2→10 · El libro no existe → 404")
     void c1_libroNoExiste() {
         // Arrange
-        when(libroRepo.findById(99L)).thenReturn(Optional.empty());
+        when(libroRepo.findByIdParaActualizar(99L)).thenReturn(Optional.empty());
         // Act
         RecursoNoEncontradoException ex = assertThrows(RecursoNoEncontradoException.class,
                 () -> service.registrarPrestamo(1L, 99L));
@@ -55,7 +55,7 @@ class CaminoBasicoRegistrarPrestamoTest {
     @DisplayName("C2 · 1→3→4→10 · Libro sin ejemplares → rechazo")
     void c2_sinEjemplares() {
         // Arrange
-        when(libroRepo.findById(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 0)));
+        when(libroRepo.findByIdParaActualizar(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 0)));
         // Act
         ReglaNegocioException ex = assertThrows(ReglaNegocioException.class,
                 () -> service.registrarPrestamo(1L, 1L));
@@ -67,7 +67,7 @@ class CaminoBasicoRegistrarPrestamoTest {
     @DisplayName("C3 · 1→3→5→6→10 · Estudiante INACTIVO → rechazo")
     void c3_estudianteInactivo() {
         // Arrange
-        when(libroRepo.findById(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 2)));
+        when(libroRepo.findByIdParaActualizar(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 2)));
         when(estudianteRepo.findById(1L)).thenReturn(Optional.of(new Estudiante("1", "Ana", Estudiante.INACTIVO)));
         // Act
         ReglaNegocioException ex = assertThrows(ReglaNegocioException.class,
@@ -80,7 +80,7 @@ class CaminoBasicoRegistrarPrestamoTest {
     @DisplayName("C4 · 1→3→5→7→8→10 · Estudiante con 3 préstamos activos → rechazo")
     void c4_limiteDePrestamos() {
         // Arrange
-        when(libroRepo.findById(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 2)));
+        when(libroRepo.findByIdParaActualizar(1L)).thenReturn(Optional.of(new Libro("111", "T", "A", 2)));
         when(estudianteRepo.findById(1L)).thenReturn(Optional.of(new Estudiante("1", "Ana", Estudiante.ACTIVO)));
         when(prestamoRepo.countByEstudianteIdAndEstado(1L, Prestamo.ACTIVO)).thenReturn(3L);
         // Act
@@ -95,7 +95,7 @@ class CaminoBasicoRegistrarPrestamoTest {
     void c5_prestamoExitoso() {
         // Arrange
         Libro libro = new Libro("111", "T", "A", 2);
-        when(libroRepo.findById(1L)).thenReturn(Optional.of(libro));
+        when(libroRepo.findByIdParaActualizar(1L)).thenReturn(Optional.of(libro));
         when(estudianteRepo.findById(1L)).thenReturn(Optional.of(new Estudiante("1", "Ana", Estudiante.ACTIVO)));
         when(prestamoRepo.countByEstudianteIdAndEstado(1L, Prestamo.ACTIVO)).thenReturn(2L);
         when(prestamoRepo.save(any(Prestamo.class))).thenAnswer(inv -> inv.getArgument(0));

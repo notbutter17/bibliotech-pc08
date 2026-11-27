@@ -137,4 +137,28 @@ class FlujoPrestamoIntegrationTest {
         mockMvc.perform(get("/api/libros/" + libroId))
                 .andExpect(jsonPath("$.ejemplaresDisponibles").value(1));
     }
+
+    @Test
+    @DisplayName("Concurrencia: 20 préstamos simultáneos descuentan exactamente 20 ejemplares (sin actualización perdida)")
+    void prestamosConcurrentes_noPierdenActualizaciones() throws Exception {
+        // Arrange
+        Libro libro = libroService.registrar(new Libro("978-CONC", "Concurrencia", "JMeter", 50));
+        java.util.List<Long> estudiantes = new java.util.ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            estudiantes.add(estudianteService.registrar(new Estudiante("8000" + i, "Concurrente " + i, null)).getId());
+        }
+        java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(20);
+        java.util.concurrent.CountDownLatch salida = new java.util.concurrent.CountDownLatch(1);
+        java.util.List<java.util.concurrent.Future<Prestamo>> futuros = new java.util.ArrayList<>();
+        // Act
+        for (Long id : estudiantes) {
+            futuros.add(pool.submit(() -> { salida.await(); return prestamoService.registrarPrestamo(id, libro.getId()); }));
+        }
+        salida.countDown();
+        for (var f : futuros) { f.get(); }
+        pool.shutdown();
+        // Assert
+        assertEquals(30, libroRepository.findById(libro.getId()).orElseThrow().getEjemplaresDisponibles());
+        assertEquals(20, prestamoRepository.count());
+    }
 }
