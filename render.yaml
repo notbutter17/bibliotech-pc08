@@ -38,4 +38,4 @@ services:
     envVars:
       # URL pública HTTPS del backend (Render la muestra en el servicio bibliotech-backend)
       - key: BACKEND_URL
-        value: https://bibliotech-backend.onrender.com
+        value: https://bibliotech-backend-6c63.onrender.com
