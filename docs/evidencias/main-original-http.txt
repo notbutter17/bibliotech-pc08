@@ -1,0 +1,3 @@
+GET /api/prestamos/validar?estudianteId=999&libroId=1 (código original):
+{"timestamp":"2026-11-27T14:57:30.672Z","status":500,"error":"Internal Server Error","path":"/api/prestamos/validar"}
+HTTP 500

@@ -1,0 +1,9 @@
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.580 s -- in Mockito · PrestamoService
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in Mockito · EstudianteService (RN-02)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in Mockito · LibroService (RN-01)
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in RN-02 · Validaciones de estudiante
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in Camino básico · registrarPrestamo()  V(G)=5
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in RN-01 · Validaciones de libro
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in Camino básico · devolverLibro()  V(G)=3
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS

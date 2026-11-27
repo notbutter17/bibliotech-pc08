@@ -1,0 +1,29 @@
+❯ Building...
+✔ Building...
+Application bundle generation complete. [0.576 seconds] - 2026-11-27T14:50:52.422Z
+ RUN  v5.0.1 /Users/joseguillermoticona/Downloads/bibliotech-pc08/frontend
+      Coverage enabled with v8
+ Test Files  5 passed (5)
+      Tests  24 passed (24)
+   Start at  09:50:52
+   Duration  863ms (environment 63%, setup 20%, tests 7%, transform 5%, worker 3%, import 3%)
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   96.86 |    88.17 |   73.91 |   98.13 |                   
+ app/libros        |   96.47 |    97.05 |   83.33 |   97.67 |                   
+  ...omponent.html |   96.15 |    92.85 |       0 |   98.18 | 36                
+  ....component.ts |   96.66 |      100 |   88.88 |   96.15 | 37                
+ app/prestamos     |   97.23 |    78.57 |   68.75 |    99.1 |                   
+  ...omponent.html |   98.65 |    33.33 |   14.28 |     100 | 11-35             
+  ....component.ts |   92.15 |       95 |      80 |   97.56 | 57                
+ app/shared        |   85.71 |    85.71 |     100 |   85.71 |                   
+  mensaje-error.ts |   85.71 |    85.71 |     100 |   85.71 | 14                
+-------------------|---------|----------|---------|---------|-------------------
+=============================== Coverage summary ===============================
+Statements   : 96.86% ( 371/383 )
+Branches     : 88.17% ( 82/93 )
+Functions    : 73.91% ( 34/46 )
+Lines        : 98.13% ( 210/214 )
+================================================================================

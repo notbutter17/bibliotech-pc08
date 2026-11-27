@@ -48,12 +48,12 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
-      - name: Ejecutar pruebas del backend
+      - name: Pruebas unitarias, integración y JaCoCo (>= 80 %)
         working-directory: backend
-        run: mvn -B test
+        run: mvn -B verify
 
   frontend:
-    name: Frontend - ESLint y Build
+    name: Frontend - ESLint, pruebas y Build
     runs-on: ubuntu-latest
     steps:
       - name: Obtener código
@@ -73,6 +73,10 @@ jobs:
       - name: Ejecutar ESLint
         working-directory: frontend
         run: npx ng lint
+
+      - name: Pruebas Angular
+        working-directory: frontend
+        run: npx ng test --watch=false
 
       - name: Compilar Angular
         working-directory: frontend

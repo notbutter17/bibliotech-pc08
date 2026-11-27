@@ -1,0 +1,6 @@
+.encabezado { background: #173b67; color: #fff; padding: 16px 32px; display: flex; align-items: center; gap: 32px; }
+.encabezado h1 { margin: 0; font-size: 26px; }
+nav { display: flex; gap: 16px; }
+nav a { color: #cfe0f5; text-decoration: none; padding: 6px 10px; border-radius: 4px; }
+nav a.activo { background: rgba(255,255,255,.15); color: #fff; }
+.contenido { max-width: 1000px; margin: 24px auto; padding: 0 16px; }

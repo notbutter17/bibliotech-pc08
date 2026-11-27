@@ -1,0 +1,118 @@
+(node:26960) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+BiblioTech API · Producto U1
+
+❏ Libros (RN-01)
+↳ GET libros · 200 lista con estado
+  GET http://localhost:8080/api/libros [200 OK, 664B, 12ms]
+  ✓  Status 200
+  ✓  Es un arreglo y cada libro trae estado calculado
+
+↳ POST libro válido · 201
+  POST http://localhost:8080/api/libros [201 Created, 416B, 105ms]
+  ✓  Status 201
+  ✓  Cuerpo: id, ISBN y estado DISPONIBLE
+  ✓  Header Location
+
+↳ POST libro sin ISBN · 400
+  POST http://localhost:8080/api/libros [400 Bad Request, 282B, 4ms]
+  ✓  Status 400
+  ✓  Mensaje: El ISBN es obligatorio
+
+↳ POST libro ejemplares negativos · 400
+  POST http://localhost:8080/api/libros [400 Bad Request, 298B, 2ms]
+  ✓  Status 400
+  ✓  Mensaje: no pueden ser negativos
+
+↳ POST libro ISBN duplicado · 409
+  POST http://localhost:8080/api/libros [409 Conflict, 333B, 3ms]
+  ✓  Status 409
+  ✓  Mensaje: Ya existe un libro con el ISBN
+
+↳ POST libro sin ejemplares (borde 0) · 201 NO DISPONIBLE
+  POST http://localhost:8080/api/libros [201 Created, 401B, 2ms]
+  ✓  Status 201
+  ✓  Estado NO DISPONIBLE
+
+↳ GET libro inexistente · 404
+  GET http://localhost:8080/api/libros/999999 [404 Not Found, 319B, 5ms]
+  ✓  Status 404
+  ✓  Mensaje: no existe
+
+❏ Estudiantes (RN-02)
+↳ POST estudiante · 201 ACTIVO
+  POST http://localhost:8080/api/estudiantes [201 Created, 353B, 6ms]
+  ✓  Status 201
+  ✓  Estado inicial ACTIVO aunque se envíe otro
+
+↳ POST estudiante DNI duplicado · 409
+  POST http://localhost:8080/api/estudiantes [409 Conflict, 329B, 3ms]
+  ✓  Status 409
+  ✓  Mensaje: Ya existe un estudiante con el DNI
+
+↳ POST estudiante sin nombre · 400
+  POST http://localhost:8080/api/estudiantes [400 Bad Request, 284B, 2ms]
+  ✓  Status 400
+  ✓  Mensaje: El nombre es obligatorio
+
+❏ Préstamos (RN-03 / RN-04)
+↳ POST préstamo válido · 201 baja ejemplar
+  POST http://localhost:8080/api/prestamos [201 Created, 562B, 24ms]
+  ✓  Status 201
+  ✓  Préstamo ACTIVO y el libro baja de 2 a 1
+
+↳ POST préstamo libro sin ejemplares · 409
+  POST http://localhost:8080/api/prestamos [409 Conflict, 326B, 2ms]
+  ✓  Status 409
+  ✓  Mensaje: no tiene ejemplares disponibles
+
+↳ POST préstamo libro inexistente · 404
+  POST http://localhost:8080/api/prestamos [404 Not Found, 305B, 2ms]
+  ✓  Status 404
+  ✓  Mensaje: El libro no existe
+
+↳ POST préstamo estudiante inexistente · 409
+  POST http://localhost:8080/api/prestamos [409 Conflict, 327B, 4ms]
+  ✓  Status 409
+  ✓  Mensaje: no existe o no está ACTIVO
+
+↳ POST préstamo sin libroId · 400
+  POST http://localhost:8080/api/prestamos [400 Bad Request, 299B, 1ms]
+  ✓  Status 400
+
+↳ PUT devolución · 200 DEVUELTO
+  PUT http://localhost:8080/api/prestamos/1/devolucion [200 OK, 524B, 4ms]
+  ✓  Status 200
+  ✓  Préstamo DEVUELTO y el libro recupera el ejemplar
+
+↳ PUT devolución repetida · 409
+  PUT http://localhost:8080/api/prestamos/1/devolucion [409 Conflict, 314B, 2ms]
+  ✓  Status 409
+  ✓  Mensaje: ya fue devuelto
+
+↳ PUT devolución inexistente · 404
+  PUT http://localhost:8080/api/prestamos/999999/devolucion [404 Not Found, 309B, 2ms]
+  ✓  Status 404
+  ✓  Mensaje: El préstamo no existe
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                18 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                18 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                36 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 358ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 2.01kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 10ms [min: 1ms, max: 105ms, s.d.: 23ms] │
+└────────────────────────────────────────────────────────────────┘
